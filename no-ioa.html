@@ -735,7 +735,7 @@
               <div class="tools-switch-tabs">
                 <button type="button" class="tools-switch-tab active" data-target="usView">美国工作区 · 分摊 / 提单</button>
                 <button type="button" class="tools-switch-tab" data-target="caView">加拿大工作区 · 分摊 / 提单</button>
-                <button type="button" class="tools-switch-tab" data-target="sgView">新加坡 · EE Listing</button>
+                <button type="button" class="tools-switch-tab" data-target="sgView">SG - Medical Check Up</button>
               </div>
 
               <div id="usView" class="lite-view active">
@@ -887,18 +887,18 @@
               </div>
 
               <div id="sgView" class="lite-view">
-                <div class="tools-region-banner non-americas"><h3>新加坡工作区 · EE Listing</h3></div>
+                <div class="tools-region-banner non-americas"><h3>SG - Medical Check Up</h3></div>
                 <div class="panel allocation-ops-panel">
                   <div class="rt-workspace">
                     <h3 class="rt-l3-title">操作步骤</h3>
                     <div class="rt-step-group">
                       <h4 class="rt-step-title">步骤一 · 执行动作</h4>
-                      <div class="rt-auto-bar"><span class="rt-auto-label">自动化</span><button type="button" class="btn btn-primary" id="sgBtnRun">⚡ 一键生成 EE Listing 摘要</button></div>
+                      <div class="rt-auto-bar"><span class="rt-auto-label">自动化</span><button type="button" class="btn btn-primary" id="sgBtnRun">⚡ 一键生成 Medical Check Up 摘要</button></div>
                       <h4 class="rt-step-title">步骤二 · 上传输入文件</h4>
                       <div class="rt-form-grid">
                         <label class="rt-field rt-span2">① Active Employee Report<input type="file" id="sgActive" accept=".xlsx" /></label>
                         <label class="rt-field rt-span2">② Terminated Report<input type="file" id="sgTerminated" accept=".xlsx" /></label>
-                        <label class="rt-field rt-span2">③ 上月 EE Listing<input type="file" id="sgLastEe" accept=".xlsx" /></label>
+                        <label class="rt-field rt-span2">③ 上月 Medical Check Up 结果<input type="file" id="sgLastEe" accept=".xlsx" /></label>
                       </div>
                       <h4 class="rt-step-title">步骤三 · 结果输出</h4>
                       <div class="lite-actions"><button type="button" class="btn btn-sm" id="sgDownloadTemplate">下载提交模板说明</button></div>
@@ -1085,7 +1085,7 @@
       knowledgeDocs: [
         { id: "OPS-01", title: "US 月结分摊 SOP", type: "SOP", status: "已入库", updated: "2026-06-30", content: "US 分摊流程步骤：准备台账、校验字段、执行自动分摊、复核差异。" },
         { id: "OPS-02", title: "CAN 提单检查清单", type: "Checklist", status: "待复核", updated: "2026-06-28", content: "CAN 提单提交前检查：金额、成本中心、项目编码、审批链路。" },
-        { id: "OPS-03", title: "SG EE Listing 规则", type: "Policy", status: "已更新", updated: "2026-06-29", content: "SG EE Listing 规则：Active/Terminated 合并规则、冲突优先级、输出标签定义。" }
+        { id: "OPS-03", title: "SG Medical Check Up 规则", type: "Policy", status: "已更新", updated: "2026-06-29", content: "SG Medical Check Up 规则：输入文件映射、结果生成、冲突优先级、输出标签定义。" }
       ],
       toolRuns: [],
       toolReminders: [
@@ -1497,7 +1497,7 @@
         tools: [
           { id: "usView", label: "美国工作区 · 分摊 / 提单", action: () => switchToolView("usView") },
           { id: "caView", label: "加拿大工作区 · 分摊 / 提单", action: () => switchToolView("caView") },
-          { id: "sgView", label: "新加坡 · EE Listing", action: () => switchToolView("sgView") },
+          { id: "sgView", label: "SG - Medical Check Up", action: () => switchToolView("sgView") },
         ],
         knowledge: [
           { id: "kb-shelves", label: "书架", action: () => switchSubView("kb-shelves", "#panelKnowledge") },
@@ -2496,17 +2496,17 @@
         renderToolMetrics("ca");
       });
       document.getElementById("sgBtnRun").addEventListener("click", () => {
-        const summary = `SG EE Listing 摘要\n生成时间: ${nowText()}\nActive: ${fileName("sgActive")}\nTerminated: ${fileName("sgTerminated")}\n上月EE: ${fileName("sgLastEe")}\n\n输出标签: 新增 / 离职 / 冲突 / 缺失`;
-        executeToolAction("sg", "ee_listing_summary", `SG EE Listing 摘要示例执行\nActive: ${fileName("sgActive")}\nTerminated: ${fileName("sgTerminated")}\n上月EE: ${fileName("sgLastEe")}`, "sgLog");
-        downloadText(`SG_ee_summary_${safeFileTs()}.txt`, summary);
-        addToolRun("sg", "download_summary", "自动下载 SG 摘要文档");
+        const summary = `SG Medical Check Up 摘要\n生成时间: ${nowText()}\nActive: ${fileName("sgActive")}\nTerminated: ${fileName("sgTerminated")}\n上月结果: ${fileName("sgLastEe")}\n\n输出标签: 新增 / 离职 / 冲突 / 缺失`;
+        executeToolAction("sg", "medical_checkup_summary", `SG Medical Check Up 摘要示例执行\nActive: ${fileName("sgActive")}\nTerminated: ${fileName("sgTerminated")}\n上月结果: ${fileName("sgLastEe")}`, "sgLog");
+        downloadText(`SG_medical_checkup_summary_${safeFileTs()}.txt`, summary);
+        addToolRun("sg", "download_summary", "自动下载 SG Medical Check Up 摘要文档");
         renderToolHistory("sg");
         renderToolMetrics("sg");
       });
       document.getElementById("sgDownloadTemplate").addEventListener("click", () => {
-        const text = "SG EE Listing 模板说明\n1) 上传 Active/Terminated/Last Month\n2) 字段建议: employee_id, legal_name, cost_center\n3) 输出标签: 新增/离职/冲突/缺失";
-        downloadText("SG_eelisting_template_note.txt", text);
-        addToolRun("sg", "download_template", "下载 SG 提交模板说明");
+        const text = "SG Medical Check Up 模板说明\n1) 上传 Active / Terminated / Last Month Result\n2) 字段建议: employee_id, legal_name, medical_checkup_status\n3) 输出标签: 新增/离职/冲突/缺失";
+        downloadText("SG_medical_checkup_template_note.txt", text);
+        addToolRun("sg", "download_template", "下载 SG Medical Check Up 模板说明");
         renderToolHistory("sg");
         renderToolMetrics("sg");
       });
