@@ -1,0 +1,1829 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SSC 工作台 · 无 IOA 高仿版</title>
+  <link rel="stylesheet" href="tokens.css?v=8a0f394" />
+  <link rel="stylesheet" href="console-shell.css?v=8a0f394" />
+  <link rel="stylesheet" href="app.css?v=8a0f394" />
+  <style>
+    .lite-warning {
+      margin: 10px 0 14px;
+      padding: 12px 14px;
+      border: 1px solid #bfdbfe;
+      background: #eff6ff;
+      color: #1e3a8a;
+      border-radius: 12px;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+    .panel-section,
+    .sub-view,
+    .lite-view {
+      display: none;
+    }
+    .panel-section.active,
+    .sub-view.active,
+    .lite-view.active {
+      display: block;
+    }
+    .sub-tabs,
+    .tools-switch-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 0 0 14px;
+    }
+    .sub-tab,
+    .tools-switch-tab {
+      border: 1px solid #cbd5e1;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 12px;
+      cursor: pointer;
+      background: #fff;
+      color: #0f172a;
+      font-weight: 600;
+    }
+    .sub-tab.active,
+    .tools-switch-tab.active {
+      background: #2563eb;
+      color: #fff;
+      border-color: #2563eb;
+    }
+    .lite-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+    }
+    .lite-kpis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin: 0 0 14px;
+    }
+    .lite-kpi {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid #dbeafe;
+      border-radius: 14px;
+      padding: 12px 14px;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+    }
+    .lite-kpi .k {
+      font-size: 12px;
+      color: #64748b;
+      letter-spacing: .01em;
+    }
+    .lite-kpi .v {
+      margin-top: 6px;
+      font-weight: 800;
+      color: #0f172a;
+      font-size: 22px;
+    }
+    .lite-card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 14px 16px;
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+    }
+    .lite-card h4 {
+      margin: 0 0 6px;
+      font-size: 14px;
+    }
+    .lite-card p {
+      margin: 0;
+      color: #475569;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+    .lite-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+    }
+    .lite-table th, .lite-table td {
+      padding: 9px 10px;
+      border-bottom: 1px solid #f1f5f9;
+      text-align: left;
+    }
+    .lite-table th {
+      background: #f8fafc;
+      color: #334155;
+      font-weight: 700;
+    }
+    .lite-actions {
+      margin-top: 10px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .lite-actions .btn.btn-sm {
+      border-radius: 10px;
+      border-color: #cbd5e1;
+      background: #fff;
+    }
+    .lite-log {
+      margin-top: 10px;
+      min-height: 42px;
+      border: 1px dashed #cbd5e1;
+      border-radius: 10px;
+      padding: 10px 12px;
+      background: #f8fafc;
+      font-size: 12px;
+      color: #334155;
+      white-space: pre-wrap;
+    }
+    .lite-form-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .lite-form-row input,
+    .lite-form-row select,
+    .lite-form-row textarea {
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 7px 10px;
+      font-size: 12px;
+      background: #fff;
+    }
+    .lite-list {
+      margin-top: 10px;
+      display: grid;
+      gap: 8px;
+    }
+    .lite-item {
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 10px 12px;
+      background: #fff;
+    }
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      border: 1px solid #dbeafe;
+      background: #eff6ff;
+      color: #1e40af;
+      margin-right: 6px;
+    }
+    .link-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .link-item {
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      background: #fff;
+      padding: 10px 12px;
+    }
+    .link-item .k {
+      font-size: 11px;
+      color: #64748b;
+      margin-bottom: 4px;
+    }
+    .link-item a {
+      font-size: 12px;
+      color: #1d4ed8;
+      word-break: break-all;
+      text-decoration: none;
+    }
+    .noioa-badge {
+      margin-left: 8px;
+      font-size: 10px;
+      color: #0369a1;
+      background: #e0f2fe;
+      border: 1px solid #7dd3fc;
+      border-radius: 999px;
+      padding: 1px 8px;
+      font-weight: 700;
+    }
+    .kgf-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin: 10px 0 14px;
+    }
+    .kgf-kpi-card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 12px 14px;
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05);
+    }
+    .kgf-kpi-card .k {
+      font-size: 12px;
+      color: #64748b;
+    }
+    .kgf-kpi-card .v {
+      margin-top: 5px;
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1;
+      color: #0f172a;
+    }
+    .kgf-three-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .kgf-source-card {
+      border-radius: 12px;
+      padding: 12px;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      min-height: 98px;
+    }
+    .kgf-source-card.bot {
+      border-top: 3px solid #818cf8;
+    }
+    .kgf-source-card.ex {
+      border-top: 3px solid #f87171;
+    }
+    .kgf-source-card.pm {
+      border-top: 3px solid #60a5fa;
+    }
+    .kgf-main-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 1.35fr;
+      gap: 12px;
+    }
+    .kgf-step {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      margin-bottom: 10px;
+      font-size: 12px;
+    }
+    .kgf-step-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      margin-top: 4px;
+      flex: 0 0 auto;
+    }
+    .kgf-queue-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .kgf-queue-card {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 10px;
+      background: #fff;
+    }
+    .kgf-bar {
+      margin-top: 8px;
+      height: 6px;
+      border-radius: 999px;
+      background: #e2e8f0;
+      overflow: hidden;
+    }
+    .kgf-bar > span {
+      display: block;
+      height: 100%;
+      border-radius: 999px;
+    }
+    .bot-panel {
+      margin-top: 14px;
+      border: 1px solid #c7d2fe;
+      border-radius: 14px;
+      background: linear-gradient(180deg, #ffffff 0%, #eef2ff 100%);
+      padding: 12px;
+    }
+    .bot-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .bot-row input {
+      flex: 1;
+      min-width: 260px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: 13px;
+    }
+    .bot-log {
+      margin-top: 10px;
+      border: 1px dashed #cbd5e1;
+      border-radius: 10px;
+      padding: 10px 12px;
+      background: #fff;
+      white-space: pre-wrap;
+      font-size: 12px;
+      color: #334155;
+      min-height: 54px;
+    }
+    .sub-rail.console-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 10px 0 8px;
+      margin-top: 0;
+      border-top: 1px solid #e2e8f0;
+      border-bottom: 1px solid #e2e8f0;
+      background: #fff;
+    }
+    .console-main-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding-top: 14px;
+    }
+    .console-page-head {
+      margin-bottom: 12px;
+      align-items: flex-end;
+    }
+    .ssc-page-sub {
+      margin-top: 4px;
+      color: #64748b;
+      font-size: 12px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .panel {
+      border-radius: 14px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 12px rgba(15, 23, 42, 0.04);
+    }
+    .panel-head h3 {
+      font-size: 16px;
+      letter-spacing: .01em;
+    }
+    .admin-page-hero {
+      border: 1px solid #dbeafe;
+      border-radius: 14px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      padding: 14px 16px;
+      box-shadow: 0 3px 12px rgba(37, 99, 235, 0.08);
+    }
+    .issue-hero-actions .btn,
+    .meeting-hero .btn {
+      border-radius: 10px;
+    }
+    .project-stack .panel {
+      margin-bottom: 10px;
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .project-stack .panel:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
+    }
+    .issue-table th {
+      background: #f1f5f9;
+      color: #334155;
+      font-weight: 700;
+      font-size: 12px;
+    }
+    .issue-table td {
+      font-size: 12px;
+      vertical-align: middle;
+      border-bottom: 1px solid #eef2f7;
+    }
+    .issue-table tr:hover td {
+      background: #fbfdff;
+    }
+    .bot-status {
+      margin-bottom: 10px;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      background: #f8fafc;
+      padding: 8px 10px;
+      min-height: 38px;
+      font-size: 12px;
+      color: #334155;
+      white-space: pre-wrap;
+    }
+    .agent-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 10px;
+    }
+    .agent-card {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 12px;
+      background: #fff;
+    }
+    .agent-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .agent-top h4 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .agent-card dl {
+      margin: 0;
+      display: grid;
+      grid-template-columns: 60px 1fr;
+      gap: 4px 8px;
+      font-size: 12px;
+    }
+    .agent-card dt {
+      color: #64748b;
+    }
+    .agent-card dd {
+      margin: 0;
+      color: #334155;
+      word-break: break-all;
+    }
+    @media (max-width: 980px) {
+      .console-main-inner {
+        padding-top: 8px;
+      }
+      .sub-rail {
+        padding-top: 8px;
+      }
+      .admin-page-hero {
+        padding: 12px;
+      }
+      .kgf-three-grid,
+      .kgf-main-grid,
+      .kgf-queue-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body class="ssc-console-body">
+  <div class="root-layout">
+    <div class="console-rails">
+      <div class="panel-rail-wrap">
+        <span class="panel-rail-eyebrow">功能板块 · PANELS · 5</span>
+        <nav class="panel-rail" role="tablist" id="mainPanelRail">
+          <button type="button" class="panel-rail-btn active" data-panel="tools">
+            <span class="panel-rail-badge">P1</span><span class="panel-rail-label"><span class="panel-rail-cn">区域工具</span><span class="panel-rail-en">Regional Tools</span></span>
+          </button>
+          <button type="button" class="panel-rail-btn" data-panel="knowledge">
+            <span class="panel-rail-badge">P2</span><span class="panel-rail-label"><span class="panel-rail-cn">知识库</span><span class="panel-rail-en">Knowledge</span></span>
+          </button>
+          <button type="button" class="panel-rail-btn" data-panel="home">
+            <span class="panel-rail-label"><span class="panel-rail-cn">全局总览</span><span class="panel-rail-en">Overview</span></span>
+          </button>
+          <button type="button" class="panel-rail-btn" data-panel="collab">
+            <span class="panel-rail-badge">P4</span><span class="panel-rail-label"><span class="panel-rail-cn">协同</span><span class="panel-rail-en">Collaboration</span></span>
+          </button>
+          <button type="button" class="panel-rail-btn" data-panel="system">
+            <span class="panel-rail-badge">P5</span><span class="panel-rail-label"><span class="panel-rail-cn">系统管理</span><span class="panel-rail-en">Administration</span></span>
+          </button>
+        </nav>
+      </div>
+    </div>
+
+    <div class="console-body console-body-full">
+      <div class="shell console-legacy-shell console-full-main">
+        <div class="console-main">
+          <div class="console-main-inner">
+            <div class="console-page-head">
+              <div class="console-page-head-main">
+                <h2 id="mainTitle">区域工具 · 共享版</h2>
+                <span class="ssc-page-sub">NO AUTH MODE · Pure Frontend</span>
+                <span class="noioa-badge">NO IOA</span>
+              </div>
+            </div>
+            <nav class="sub-rail console-tabs" id="globalSubRail"></nav>
+
+            <div class="lite-warning">
+              这是“高仿可操作克隆页”：保留五大板块与二级页签交互，所有数据存储在浏览器本地。<br />
+              不接入 iOA、无任何鉴权依赖；关闭浏览器后数据仍会保留（localStorage）。
+            </div>
+
+            <section id="panelTools" class="panel-section active">
+              <div class="tools-switch-tabs">
+                <button type="button" class="tools-switch-tab active" data-target="usView">美国工作区 · 分摊 / 提单</button>
+                <button type="button" class="tools-switch-tab" data-target="caView">加拿大工作区 · 分摊 / 提单</button>
+                <button type="button" class="tools-switch-tab" data-target="sgView">新加坡 · EE Listing</button>
+              </div>
+
+              <div id="usView" class="lite-view active">
+                <div class="tools-region-banner americas"><h3>美国工作区 · 分摊 / 提单</h3><p>与原版一致的操作结构，示例执行不依赖后端。</p></div>
+                <div class="panel allocation-ops-panel">
+                  <div class="rt-auto-bar"><span class="rt-auto-label">自动化</span><button type="button" class="btn btn-primary" id="usBtnAlloc">⚡ 动作1 · 批量自动分摊</button><button type="button" class="btn" id="usBtnSubmit">📋 动作2 · 生成提单文本</button></div>
+                  <div class="rt-workspace">
+                    <div class="rt-form-grid">
+                      <label class="rt-field">账单月 YYYYMM<input type="text" id="usPeriod" maxlength="6" placeholder="202607" /></label>
+                      <label class="rt-field rt-span2">台账 CSV<input type="file" id="usLedger" accept=".csv,text/csv" /></label>
+                      <label class="rt-field rt-span2">P1 人数 CSV<input type="file" id="usP1" accept=".csv,text/csv" /></label>
+                      <label class="rt-field rt-span2">提单 CSV<input type="file" id="usSubmission" accept=".csv,text/csv" /></label>
+                    </div>
+                    <div class="lite-actions"><button type="button" class="btn btn-sm" id="usDownloadSample">下载示例结果 CSV</button></div>
+                    <div class="lite-log" id="usLog">等待执行…</div>
+                  </div>
+                </div>
+              </div>
+
+              <div id="caView" class="lite-view">
+                <div class="tools-region-banner americas"><h3>加拿大工作区 · 分摊 / 提单</h3><p>与美国同动作，区域固定 CAN。</p></div>
+                <div class="panel allocation-ops-panel">
+                  <div class="rt-auto-bar"><span class="rt-auto-label">自动化</span><button type="button" class="btn btn-primary" id="caBtnAlloc">⚡ 动作1 · 批量自动分摊</button><button type="button" class="btn" id="caBtnSubmit">📋 动作2 · 生成提单文本</button></div>
+                  <div class="rt-workspace">
+                    <div class="rt-form-grid">
+                      <label class="rt-field">账单月 YYYYMM<input type="text" id="caPeriod" maxlength="6" placeholder="202607" /></label>
+                      <label class="rt-field rt-span2">台账 CSV<input type="file" id="caLedger" accept=".csv,text/csv" /></label>
+                      <label class="rt-field rt-span2">P1 人数 CSV<input type="file" id="caP1" accept=".csv,text/csv" /></label>
+                      <label class="rt-field rt-span2">提单 CSV<input type="file" id="caSubmission" accept=".csv,text/csv" /></label>
+                    </div>
+                    <div class="lite-actions"><button type="button" class="btn btn-sm" id="caDownloadSample">下载示例结果 CSV</button></div>
+                    <div class="lite-log" id="caLog">等待执行…</div>
+                  </div>
+                </div>
+              </div>
+
+              <div id="sgView" class="lite-view">
+                <div class="tools-region-banner non-americas"><h3>新加坡工作区 · EE Listing</h3><p>前端示例生成清洗摘要和模板说明。</p></div>
+                <div class="panel allocation-ops-panel">
+                  <div class="rt-auto-bar"><span class="rt-auto-label">自动化</span><button type="button" class="btn btn-primary" id="sgBtnRun">⚡ 一键生成 EE Listing 摘要</button></div>
+                  <div class="rt-workspace">
+                    <div class="rt-form-grid">
+                      <label class="rt-field rt-span2">① Active Employee Report<input type="file" id="sgActive" accept=".xlsx" /></label>
+                      <label class="rt-field rt-span2">② Terminated Report<input type="file" id="sgTerminated" accept=".xlsx" /></label>
+                      <label class="rt-field rt-span2">③ 上月 EE Listing<input type="file" id="sgLastEe" accept=".xlsx" /></label>
+                    </div>
+                    <div class="lite-actions"><button type="button" class="btn btn-sm" id="sgDownloadTemplate">下载提交模板说明</button></div>
+                    <div class="lite-log" id="sgLog">等待执行…</div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section id="panelHome" class="panel-section">
+              <div class="sub-tabs">
+                <button type="button" class="sub-tab active" data-sub="home-overview">指挥总览</button>
+                <button type="button" class="sub-tab" data-sub="home-projects">项目 KPI</button>
+                <button type="button" class="sub-tab" data-sub="home-collab">协同态势</button>
+                <button type="button" class="sub-tab" data-sub="home-monitor">监控信号</button>
+              </div>
+              <div id="home-overview" class="sub-view active"></div>
+              <div id="home-projects" class="sub-view"></div>
+              <div id="home-collab" class="sub-view"></div>
+              <div id="home-monitor" class="sub-view"></div>
+            </section>
+
+            <section id="panelKnowledge" class="panel-section">
+              <div class="sub-tabs">
+                <button type="button" class="sub-tab active" data-sub="kb-shelves">书架</button>
+                <button type="button" class="sub-tab" data-sub="kb-ops">运营清单</button>
+                <button type="button" class="sub-tab" data-sub="kb-qa">问答入口</button>
+              </div>
+              <div id="kb-shelves" class="sub-view active"></div>
+              <div id="kb-ops" class="sub-view"></div>
+              <div id="kb-qa" class="sub-view"></div>
+            </section>
+
+            <section id="panelCollab" class="panel-section">
+              <div class="sub-tabs">
+                <button type="button" class="sub-tab active" data-sub="collab-projects">项目</button>
+                <button type="button" class="sub-tab" data-sub="collab-issues">Issue</button>
+                <button type="button" class="sub-tab" data-sub="collab-meetings">会议</button>
+              </div>
+              <div id="collab-projects" class="sub-view active"></div>
+              <div id="collab-issues" class="sub-view"></div>
+              <div id="collab-meetings" class="sub-view"></div>
+            </section>
+
+            <section id="panelSystem" class="panel-section">
+              <div class="sub-tabs">
+                <button type="button" class="sub-tab active" data-sub="sys-mgmt">管理看板</button>
+                <button type="button" class="sub-tab" data-sub="sys-users">用户管理</button>
+                <button type="button" class="sub-tab" data-sub="sys-perm">权限矩阵</button>
+                <button type="button" class="sub-tab" data-sub="sys-audit">操作日志</button>
+                <button type="button" class="sub-tab" data-sub="sys-access">权限申请</button>
+              </div>
+              <div id="sys-mgmt" class="sub-view active"></div>
+              <div id="sys-users" class="sub-view"></div>
+              <div id="sys-perm" class="sub-view"></div>
+              <div id="sys-audit" class="sub-view"></div>
+              <div id="sys-access" class="sub-view"></div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORE_KEY = "ssc_no_ioa_clone_v2";
+    const KNOT_LINKS = {
+      knotMainAgent: "https://knot.woa.com/agent/detail/68b6acdd12f740e981a6a08a728b35d1",
+      knotQaAgent: "https://knot.woa.com/agent/detail/60b0769077ac446d95ebddd21ac85cfa",
+      knotQaChat: "https://knot.woa.com/chat?web_key=60b0769077ac446d95ebddd21ac85cfa&close=0",
+      fppPortal: "https://pb0hulu9-18081h-devc.preview.with.woa.com/upload-docs.html",
+      portalPage: "portal.html",
+      workbenchPage: "index.html",
+      qaPage: "qa.html",
+      orchestrateApi: "/api/orchestrate",
+      agentRegistryApi: "/api/agent-registry"
+    };
+    const defaultState = {
+      projects: [
+        {
+          id: "P-001",
+          name: "SSC workbench rollout",
+          owner: "Anna",
+          status: "进行中",
+          progress: 72,
+          summary: "统一工作台入口、协同链路、Knot 集成演示。",
+          due: "2026-07-15",
+          milestones: [
+            { title: "UI 骨架还原", due: "2026-07-02", done: true },
+            { title: "协同模块恢复", due: "2026-07-08", done: false }
+          ],
+          reminders: ["对齐演示脚本", "确认发布链接"]
+        },
+        {
+          id: "P-002",
+          name: "CAN monthly allocation",
+          owner: "COE Ops",
+          status: "待复核",
+          progress: 58,
+          summary: "加拿大月结分摊流程梳理与提单模板映射。",
+          due: "2026-07-11",
+          milestones: [
+            { title: "模板字段确认", due: "2026-07-04", done: false }
+          ],
+          reminders: ["补充供应商映射", "复核成本中心"]
+        }
+      ],
+      issues: [
+        { id: "I-001", title: "成本中心失效", country: "US", severity: "high", status: "open", owner: "Finance Ops" },
+        { id: "I-002", title: "模板字段映射差异", country: "CAN", severity: "medium", status: "review", owner: "PMO" }
+      ],
+      meetings: [
+        { id: "M-001", topic: "6/30 月结对齐", owner: "Anna", todo: "更新分摊口径并回填台账", status: "进行中" }
+      ],
+      users: [
+        { id: "U-001", name: "Anna", role: "admin", staffType: "formal" },
+        { id: "U-002", name: "Liu Wei", role: "operator", staffType: "formal" }
+      ],
+      accessRequests: [
+        { id: "AR-001", ts: "2026-06-30 20:00", name: "Summer Intern", role: "viewer", reason: "需要查看项目进展", status: "pending" }
+      ],
+      alerts: [
+        { id: "ALT-001", severity: "high", title: "成本中心失效风险", source: "Issue", status: "open" },
+        { id: "ALT-002", severity: "medium", title: "会议待办临近超期", source: "Meeting", status: "open" }
+      ],
+      knowledgeGaps: [
+        { id: "KG-001", title: "某国际产假政策 FAQ", severity: "high", owner: "Chatbot", progress: 16 },
+        { id: "KG-002", title: "入职材料上传 SOP", severity: "high", owner: "PM", progress: 22 },
+        { id: "KG-003", title: "新薪酬结构说明", severity: "medium", owner: "PM", progress: 42 },
+        { id: "KG-004", title: "加班费计算口径稽核表", severity: "medium", owner: "Policy", progress: 39 }
+      ],
+      audit: []
+    };
+
+    function loadState() {
+      try {
+        const v = JSON.parse(localStorage.getItem(STORE_KEY) || "null");
+        return v ? { ...defaultState, ...v } : { ...defaultState };
+      } catch {
+        return { ...defaultState };
+      }
+    }
+    function saveState() {
+      localStorage.setItem(STORE_KEY, JSON.stringify(state));
+    }
+    let state = loadState();
+    let selectedProjectId = null;
+    let editingIssueId = null;
+    let meetingParsePreview = null;
+    let agentRegistryState = { loading: false, loaded: false, error: "", agents: [] };
+
+    function nowText() {
+      const d = new Date();
+      const p = (n) => String(n).padStart(2, "0");
+      return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+    }
+    function esc(s) {
+      return String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+    function addAudit(action, detail) {
+      state.audit.unshift({ ts: nowText(), action, detail });
+      state.audit = state.audit.slice(0, 60);
+      saveState();
+    }
+
+    function fileName(id) {
+      const f = document.getElementById(id)?.files?.[0];
+      return f ? f.name : "未上传";
+    }
+    function csvDownload(filename, header, rows) {
+      const content = [header.join(","), ...rows.map((r) => r.join(","))].join("\n");
+      const blob = new Blob([content], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+    function openLink(url) {
+      window.open(url, "_blank", "noopener");
+    }
+    function parseMeetingDraft(text) {
+      const lines = String(text || "").split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+      if (!lines.length) return null;
+      const topic = lines[0].replace(/^#+\s*/, "").replace(/^主题[:：]\s*/, "") || "未命名会议";
+      const todos = lines
+        .slice(1)
+        .filter((l) => /待办|todo|action|^\-|\*/i.test(l))
+        .map((l) => l.replace(/^[-*]\s*/, ""));
+      return { topic, todos: todos.length ? todos : ["待补充行动项"] };
+    }
+    async function runBotQuery(text, agentId = "", view = "") {
+      const q = String(text || "").trim();
+      if (!q) return "请输入问题";
+      try {
+        const res = await fetch(KNOT_LINKS.orchestrateApi, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            text: q,
+            agent_id: agentId || undefined,
+            view: view || undefined,
+            user: "public-no-auth"
+          })
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        const msg = data?.message || data?.summary || JSON.stringify(data);
+        return `[在线 Bot]\n${msg}`;
+      } catch {
+        return `[本地兜底]\n已记录你的问题：“${q}”\n建议下一步：\n1) 在系统管理中确认待审权限与日志\n2) 在协同模块检查项目里程碑和 Issue`;
+      }
+    }
+    async function triggerBotAction(view, prompt, agentId, statusElementId) {
+      const host = statusElementId ? document.getElementById(statusElementId) : null;
+      if (host) host.textContent = "Bot 处理中...";
+      const ans = await runBotQuery(prompt, agentId, view);
+      if (host) host.textContent = ans;
+      addAudit("bot.trigger", `${view}:${agentId || "orchestrator"}`);
+      return ans;
+    }
+    async function ensureAgentRegistry() {
+      if (agentRegistryState.loading || agentRegistryState.loaded) return;
+      agentRegistryState.loading = true;
+      try {
+        const res = await fetch(KNOT_LINKS.agentRegistryApi);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        agentRegistryState.agents = Array.isArray(data?.agents) ? data.agents : [];
+        agentRegistryState.error = "";
+      } catch (e) {
+        agentRegistryState.error = e?.message || "加载失败";
+        agentRegistryState.agents = [];
+      } finally {
+        agentRegistryState.loading = false;
+        agentRegistryState.loaded = true;
+      }
+    }
+    async function renderSystemAgentRegistry() {
+      const host = document.getElementById("agentRegistryPanel");
+      if (!host) return;
+      if (!agentRegistryState.loaded && !agentRegistryState.loading) {
+        host.innerHTML = `<div class="muted">加载 Agent Registry 中...</div>`;
+      }
+      await ensureAgentRegistry();
+      if (agentRegistryState.error) {
+        host.innerHTML = `<div class="muted">Agent Registry 加载失败：${esc(agentRegistryState.error)}</div>`;
+        return;
+      }
+      if (!agentRegistryState.agents.length) {
+        host.innerHTML = `<div class="muted">暂无 Agent 数据</div>`;
+        return;
+      }
+      host.innerHTML = `
+        <div class="agent-grid">
+          ${agentRegistryState.agents.slice(0, 10).map((a) => `
+            <div class="agent-card">
+              <div class="agent-top">
+                <h4>${esc(a.name || a.id || "agent")}</h4>
+                <span class="badge">${esc(a.handler || "route")}</span>
+              </div>
+              <dl>
+                <dt>ID</dt><dd>${esc(a.id || "-")}</dd>
+                <dt>Tab</dt><dd>${esc(a.web_tab || "-")}</dd>
+                <dt>API</dt><dd>${esc(a.api_invoke || "-")}</dd>
+              </dl>
+            </div>
+          `).join("")}
+        </div>`;
+    }
+
+    function switchMainPanel(panel) {
+      const titleMap = {
+        tools: "区域工具 · 共享版",
+        home: "全局总览 · 共享版",
+        knowledge: "知识库 · 共享版",
+        collab: "协同 · 共享版",
+        system: "系统管理 · 共享版"
+      };
+      document.querySelectorAll("#mainPanelRail .panel-rail-btn").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.panel === panel);
+      });
+      document.querySelectorAll(".panel-section").forEach((sec) => sec.classList.remove("active"));
+      document.getElementById(`panel${panel.charAt(0).toUpperCase()}${panel.slice(1)}`).classList.add("active");
+      document.getElementById("mainTitle").textContent = titleMap[panel] || "共享版";
+      renderGlobalSubRail(panel);
+    }
+
+    function switchSubView(targetId, rootSelector) {
+      const root = document.querySelector(rootSelector);
+      root.querySelectorAll(".sub-tab").forEach((tab) => {
+        tab.classList.toggle("active", tab.dataset.sub === targetId);
+      });
+      root.querySelectorAll(".sub-view").forEach((view) => {
+        view.classList.toggle("active", view.id === targetId);
+      });
+      const panel = document.querySelector("#mainPanelRail .panel-rail-btn.active")?.dataset.panel;
+      if (panel) renderGlobalSubRail(panel);
+    }
+
+    function switchToolView(targetId) {
+      document.querySelectorAll(".tools-switch-tab").forEach((btn) => btn.classList.toggle("active", btn.dataset.target === targetId));
+      document.querySelectorAll(".lite-view").forEach((v) => v.classList.toggle("active", v.id === targetId));
+      const panel = document.querySelector("#mainPanelRail .panel-rail-btn.active")?.dataset.panel;
+      if (panel) renderGlobalSubRail(panel);
+    }
+
+    function renderGlobalSubRail(panel) {
+      const rail = document.getElementById("globalSubRail");
+      if (!rail) return;
+      const defs = {
+        tools: [
+          { id: "usView", label: "美国工作区 · 分摊 / 提单", action: () => switchToolView("usView") },
+          { id: "caView", label: "加拿大工作区 · 分摊 / 提单", action: () => switchToolView("caView") },
+          { id: "sgView", label: "新加坡 · EE Listing", action: () => switchToolView("sgView") },
+        ],
+        knowledge: [
+          { id: "kb-shelves", label: "书架", action: () => switchSubView("kb-shelves", "#panelKnowledge") },
+          { id: "kb-ops", label: "运营清单", action: () => switchSubView("kb-ops", "#panelKnowledge") },
+          { id: "kb-qa", label: "知识问答 · Knot", action: () => switchSubView("kb-qa", "#panelKnowledge") },
+        ],
+        home: [
+          { id: "home-overview", label: "指挥总览", action: () => switchSubView("home-overview", "#panelHome") },
+          { id: "home-projects", label: "项目 KPI", action: () => switchSubView("home-projects", "#panelHome") },
+          { id: "home-collab", label: "协同态势", action: () => switchSubView("home-collab", "#panelHome") },
+          { id: "home-monitor", label: "监控信号", action: () => switchSubView("home-monitor", "#panelHome") },
+        ],
+        collab: [
+          { id: "collab-projects", label: "项目看板", action: () => switchSubView("collab-projects", "#panelCollab") },
+          { id: "collab-issues", label: "Issue", action: () => switchSubView("collab-issues", "#panelCollab") },
+          { id: "collab-meetings", label: "会议", action: () => switchSubView("collab-meetings", "#panelCollab") },
+        ],
+        system: [
+          { id: "sys-mgmt", label: "管理看板", action: () => switchSubView("sys-mgmt", "#panelSystem") },
+          { id: "sys-users", label: "用户管理", action: () => switchSubView("sys-users", "#panelSystem") },
+          { id: "sys-perm", label: "权限矩阵", action: () => switchSubView("sys-perm", "#panelSystem") },
+          { id: "sys-audit", label: "操作日志", action: () => switchSubView("sys-audit", "#panelSystem") },
+          { id: "sys-access", label: "权限申请", action: () => switchSubView("sys-access", "#panelSystem") },
+        ],
+      };
+      const activeMap = {
+        tools: document.querySelector(".lite-view.active")?.id || "usView",
+        knowledge: document.querySelector("#panelKnowledge .sub-view.active")?.id || "kb-shelves",
+        home: document.querySelector("#panelHome .sub-view.active")?.id || "home-overview",
+        collab: document.querySelector("#panelCollab .sub-view.active")?.id || "collab-projects",
+        system: document.querySelector("#panelSystem .sub-view.active")?.id || "sys-mgmt",
+      };
+      const items = defs[panel] || [];
+      const activeId = activeMap[panel] || "";
+      rail.innerHTML = items
+        .map((item) => `<button class="console-tab ${item.id === activeId ? "active" : ""}" data-subrail-id="${esc(item.id)}">${esc(item.label)}</button>`)
+        .join("");
+      rail.querySelectorAll("[data-subrail-id]").forEach((btn) => {
+        const item = items.find((x) => x.id === btn.dataset.subrailId);
+        if (!item) return;
+        btn.onclick = () => {
+          item.action();
+          renderGlobalSubRail(panel);
+        };
+      });
+    }
+
+    function initHeaderControls() {}
+
+    function renderHome() {
+      const doneProjects = state.projects.filter((p) => p.status === "完成").length;
+      const openIssues = state.issues.filter((i) => i.status !== "closed").length;
+      const openMeetings = state.meetings.filter((m) => m.status !== "完成").length;
+      const pendingAccess = state.accessRequests.filter((r) => r.status === "pending").length;
+      const openAlerts = state.alerts.filter((a) => a.status === "open").length;
+
+      document.getElementById("home-overview").innerHTML = `
+        <section class="command-layer home-compact">
+          <div class="home-command-bar panel">
+            <div class="ai-insight ai-insight-inline">
+              <div class="ai-insight-head">
+                <span class="ai-insight-dot"></span>
+                <span class="ai-insight-label">AI · 指挥摘要</span>
+                <span class="muted" style="font-size:11px;margin-left:auto">${nowText()}</span>
+              </div>
+              <p class="ai-insight-body">当前月结处于分摊复核窗口，建议优先处理高优先级 Issue、处理监控告警并完成权限审批。</p>
+            </div>
+          </div>
+          <div class="stat-row stat-row-compact" style="margin-top:12px">
+            <div class="stat"><div class="label">在跟项目</div><div class="val">${state.projects.length}</div></div>
+            <div class="stat"><div class="label">开放 Issue</div><div class="val">${openIssues}</div></div>
+            <div class="stat"><div class="label">会议待办</div><div class="val">${openMeetings}</div></div>
+            <div class="stat"><div class="label">待审权限申请</div><div class="val">${pendingAccess}</div></div>
+            <div class="stat"><div class="label">监控告警</div><div class="val">${openAlerts}</div></div>
+            <div class="stat"><div class="label">已完成项目</div><div class="val">${doneProjects}</div></div>
+          </div>
+          <div class="lite-actions" style="margin-top:12px">
+            <button class="btn btn-sm" id="btnHomeQuickCloseOneAlert">快速处理 1 条告警</button>
+            <button class="btn btn-sm" id="btnHomeJumpAccess">跳转系统管理-权限申请</button>
+          </div>
+        </section>
+      `;
+      document.getElementById("home-projects").innerHTML = `
+        <div class="panel" style="padding:0;overflow:hidden">
+          <table class="issue-table">
+            <thead><tr><th>ID</th><th>项目</th><th>负责人</th><th>状态</th><th>进度</th></tr></thead>
+            <tbody>${state.projects.map((p) => `<tr><td>${esc(p.id)}</td><td>${esc(p.name)}</td><td>${esc(p.owner)}</td><td>${esc(p.status)}</td><td>${esc(p.progress)}%</td></tr>`).join("")}</tbody>
+          </table>
+        </div>`;
+      document.getElementById("home-collab").innerHTML = `
+        <div class="home-dashboard-grid">
+          <div class="panel team-blackboard-panel">
+            <div class="panel-head ssc-block-head"><div class="ssc-block-head-main"><h3 class="ssc-block-head-cn">团队协同态势</h3><p class="ssc-block-head-en">Collaboration Signals</p></div></div>
+            <div class="lite-list"><div class="lite-item">Issue 未关闭 ${openIssues} 条</div><div class="lite-item">会议待办未完成 ${openMeetings} 条</div></div>
+          </div>
+          <div class="panel alert-monitor-panel">
+            <div class="alert-panel-head"><p class="section-title" style="margin:0">建议动作</p></div>
+            <p class="muted alert-panel-hint">优先清理 high issue，并将会议待办转项目行动项。</p>
+          </div>
+        </div>`;
+      document.getElementById("home-monitor").innerHTML = `
+        <div class="panel">
+          <div class="panel-head"><h3>监控信号</h3></div>
+          <div class="lite-list">
+            ${state.alerts.map((a) => `
+              <div class="lite-item">
+                <span class="tag">${esc(a.severity)}</span>
+                <strong>${esc(a.title)}</strong> · ${esc(a.source)} · 状态：${esc(a.status)}
+                <div class="lite-actions">
+                  <button class="btn btn-sm" data-alert-resolve="${esc(a.id)}">标记已处理</button>
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        </div>`;
+
+      const btnQuick = document.getElementById("btnHomeQuickCloseOneAlert");
+      if (btnQuick) {
+        btnQuick.onclick = () => {
+          const first = state.alerts.find((a) => a.status === "open");
+          if (!first) return;
+          first.status = "resolved";
+          addAudit("alert.resolve", first.id);
+          saveState();
+          renderAll();
+        };
+      }
+      const btnJump = document.getElementById("btnHomeJumpAccess");
+      if (btnJump) {
+        btnJump.onclick = () => {
+          switchMainPanel("system");
+          switchSubView("sys-access", "#panelSystem");
+        };
+      }
+      document.querySelectorAll("[data-alert-resolve]").forEach((btn) => {
+        btn.onclick = () => {
+          const item = state.alerts.find((a) => a.id === btn.dataset.alertResolve);
+          if (!item) return;
+          item.status = "resolved";
+          addAudit("alert.resolve", item.id);
+          saveState();
+          renderAll();
+        };
+      });
+    }
+
+    function renderKnowledge() {
+      const gaps = state.knowledgeGaps || [];
+      const highCnt = gaps.filter((g) => g.severity === "high").length;
+      const mediumCnt = gaps.filter((g) => g.severity === "medium").length;
+      const totalCnt = gaps.length;
+      const inProgress = gaps.filter((g) => g.progress > 0 && g.progress < 100).length;
+      document.getElementById("kb-shelves").innerHTML = `
+        <div class="panel">
+          <div class="panel-head">
+            <h3>知识缺口识别与生产 · Knowledge Gap Finder</h3>
+          </div>
+          <p class="muted" style="margin:0 0 8px">从“知识缺失导致问题”到“主动补齐知识缺口”。</p>
+
+          <div class="kgf-kpi-grid">
+            <div class="kgf-kpi-card"><div class="k">待补缺口</div><div class="v">${totalCnt}</div><div class="muted">高优 ${highCnt}</div></div>
+            <div class="kgf-kpi-card"><div class="k">生产中</div><div class="v">${inProgress}</div><div class="muted">AI 初稿 + 审核</div></div>
+            <div class="kgf-kpi-card"><div class="k">本月已入库</div><div class="v">${23 + mediumCnt}</div><div class="muted">较上月 +8</div></div>
+            <div class="kgf-kpi-card"><div class="k">缺口闭合后未命中率</div><div class="v">6<span style="font-size:20px">%</span></div><div class="muted">目标 < 10%</div></div>
+          </div>
+
+          <p class="section-title">知识缺口的 3 个识别来源</p>
+          <div class="kgf-three-grid">
+            <div class="kgf-source-card bot"><strong>Chatbot 未命中</strong><p class="muted">员工提问无法匹配知识，未命中率高即触发补缺。</p></div>
+            <div class="kgf-source-card ex"><strong>Exception Case</strong><p class="muted">同类工单反复出现，说明操作指引不清晰。</p></div>
+            <div class="kgf-source-card pm"><strong>PM 经验判断</strong><p class="muted">新政策刚上线，需预建知识沉淀。</p></div>
+          </div>
+
+          <div class="kgf-main-grid">
+            <div class="panel" style="padding:12px">
+              <div class="panel-head"><h3>知识生产流水线</h3></div>
+              <div class="kgf-step"><span class="kgf-step-dot" style="background:#22c55e"></span><div><strong>知识缺口识别</strong><div class="muted">3 类来源自动汇入</div></div></div>
+              <div class="kgf-step"><span class="kgf-step-dot" style="background:#facc15"></span><div><strong>知识类型判定</strong><div class="muted">FAQ / SOP / 政策拆行</div></div></div>
+              <div class="kgf-step"><span class="kgf-step-dot" style="background:#3b82f6"></span><div><strong>知识生产</strong><div class="muted">AI 起草 -> PM 审核 -> COE 定稿</div></div></div>
+            </div>
+            <div class="panel" style="padding:12px">
+              <div class="panel-head">
+                <h3>缺口清单</h3>
+                <button class="btn btn-sm btn-primary" id="btnDraftGap">AI 起草</button>
+              </div>
+              <div class="kgf-queue-grid">
+                ${gaps.map((g) => {
+                  const color = g.severity === "high" ? "#ef4444" : "#f59e0b";
+                  return `<div class="kgf-queue-card">
+                    <strong>${esc(g.title)}</strong>
+                    <div class="muted" style="font-size:11px;margin-top:4px">${esc(g.owner)} · ${esc(g.severity)}</div>
+                    <div class="kgf-bar"><span style="width:${Math.max(2, g.progress)}%;background:${color}"></span></div>
+                  </div>`;
+                }).join("")}
+              </div>
+            </div>
+          </div>
+        </div>`;
+      document.getElementById("kb-ops").innerHTML = `
+        <div class="panel">
+          <table class="lite-table">
+            <thead><tr><th>编号</th><th>主题</th><th>状态</th><th>更新</th></tr></thead>
+            <tbody>
+              <tr><td>OPS-01</td><td>US 月结分摊 SOP</td><td>已入库</td><td>2026-06-30</td></tr>
+              <tr><td>OPS-02</td><td>CAN 提单检查清单</td><td>待复核</td><td>2026-06-28</td></tr>
+              <tr><td>OPS-03</td><td>SG EE Listing 规则</td><td>已更新</td><td>2026-06-29</td></tr>
+            </tbody>
+          </table>
+        </div>`;
+      document.getElementById("kb-qa").innerHTML = `
+        <div class="panel">
+          <div class="panel-head"><h3>问答入口 · Knot / Agent 链接已迁移</h3></div>
+          <p class="muted">无 IOA 版本不做鉴权，但保留原页面的 Knot/Agent 入口，方便你和同事直接跳转。</p>
+          <div class="lite-actions">
+            <a class="btn btn-sm" href="${KNOT_LINKS.qaPage}" target="_blank" rel="noopener">打开 qa.html</a>
+            <button class="btn btn-sm" id="btnOpenKnotQaChat">打开 Knot 问答 Chat</button>
+            <button class="btn btn-sm" id="btnOpenKnotQaAgent">打开 Knot 问答 Agent</button>
+          </div>
+          <div class="bot-panel">
+            <div class="panel-head"><h3>Bot 对话（迁移可用代码）</h3></div>
+            <div class="bot-row">
+              <input id="botInput" placeholder="问：当前缺口最高优先级是什么？" />
+              <button class="btn btn-sm btn-primary" id="btnBotAsk">发送</button>
+            </div>
+            <div class="bot-log" id="botLog">等待提问…</div>
+          </div>
+        </div>`;
+      document.getElementById("btnOpenKnotQaChat").onclick = () => openLink(KNOT_LINKS.knotQaChat);
+      document.getElementById("btnOpenKnotQaAgent").onclick = () => openLink(KNOT_LINKS.knotQaAgent);
+      const btnDraft = document.getElementById("btnDraftGap");
+      if (btnDraft) {
+        btnDraft.onclick = () => {
+          addAudit("knowledge.gap_draft", "AI 起草");
+          const target = state.knowledgeGaps.find((g) => g.progress < 100);
+          if (target) target.progress = Math.min(100, target.progress + 18);
+          saveState();
+          renderAll();
+        };
+      }
+      const btnBotAsk = document.getElementById("btnBotAsk");
+      if (btnBotAsk) {
+        btnBotAsk.onclick = async () => {
+          const input = document.getElementById("botInput");
+          const log = document.getElementById("botLog");
+          if (!input || !log) return;
+          log.textContent = "处理中...";
+          const ans = await runBotQuery(input.value);
+          log.textContent = ans;
+          addAudit("bot.ask", input.value.trim() || "(empty)");
+        };
+      }
+    }
+
+    function renderCollab() {
+      const selectedProject = state.projects.find((p) => p.id === selectedProjectId);
+      const editingIssue = state.issues.find((i) => i.id === editingIssueId);
+
+      document.getElementById("collab-projects").innerHTML = `
+        <header class="admin-page-hero" style="margin-bottom:12px">
+          <div>
+            <h3 style="margin:0">项目看板</h3>
+            <p class="muted" style="margin:6px 0 0">第一批功能恢复：筛选、详情编辑、里程碑、提醒（本地持久化）</p>
+          </div>
+          <div class="issue-hero-actions">
+            <button class="btn btn-primary btn-sm" id="btnAddProject">新建项目</button>
+            <button class="btn btn-sm" id="btnProjAskKnot">在 Knot 问项目进展</button>
+          </div>
+        </header>
+        <div class="bot-status" id="projBotStatus">等待触发项目 Bot...</div>
+        <div class="lite-form-row" style="margin-bottom:10px">
+          <input id="projectSearch" placeholder="搜索项目名称 / 负责人" />
+          <select id="projectStatusFilter">
+            <option value="">全部状态</option>
+            <option value="进行中">进行中</option>
+            <option value="待复核">待复核</option>
+            <option value="完成">完成</option>
+          </select>
+          <input id="newProjName" placeholder="项目名称" />
+          <input id="newProjOwner" placeholder="负责人" />
+          <select id="newProjStatus"><option>进行中</option><option>待复核</option><option>完成</option></select>
+        </div>
+        <div class="project-stack" id="projectCardsHost" style="margin-top:10px"></div>
+        ${selectedProject ? `
+          <div class="panel project-detail-wrap" style="margin-top:12px">
+            <div class="panel-head"><h3>项目详情 · ${esc(selectedProject.name)}</h3></div>
+            <div class="lite-form-row">
+              <input id="projNameInput" value="${esc(selectedProject.name)}" />
+              <input id="projOwnerInput" value="${esc(selectedProject.owner)}" />
+              <select id="projStatusInput">
+                <option value="进行中" ${selectedProject.status === "进行中" ? "selected" : ""}>进行中</option>
+                <option value="待复核" ${selectedProject.status === "待复核" ? "selected" : ""}>待复核</option>
+                <option value="完成" ${selectedProject.status === "完成" ? "selected" : ""}>完成</option>
+              </select>
+              <input id="projDueInput" type="date" value="${esc(selectedProject.due || "")}" />
+              <input id="projProgressInput" type="number" min="0" max="100" value="${esc(selectedProject.progress)}" style="width:110px" />
+            </div>
+            <div class="lite-form-row">
+              <textarea id="projSummaryInput" rows="2" style="min-width:360px" placeholder="项目摘要">${esc(selectedProject.summary || "")}</textarea>
+            </div>
+            <div class="lite-actions">
+              <button class="btn btn-sm btn-primary" id="btnSaveProjectDetail">保存详情</button>
+              <button class="btn btn-sm" id="btnCloseProjDetail">收起</button>
+            </div>
+            <div class="panel" style="margin-top:10px">
+              <div class="panel-head"><h3>里程碑</h3></div>
+              <div class="lite-list" id="projectMilestoneList"></div>
+              <div class="lite-form-row">
+                <input id="newMilestoneTitle" placeholder="里程碑名称" />
+                <input id="newMilestoneDue" type="date" />
+                <button class="btn btn-sm" id="btnAddMilestone">新增里程碑</button>
+              </div>
+            </div>
+            <div class="panel" style="margin-top:10px">
+              <div class="panel-head"><h3>提醒事项</h3></div>
+              <div class="lite-list" id="projectReminderList"></div>
+              <div class="lite-form-row">
+                <input id="newReminderText" placeholder="新增提醒..." style="min-width:260px" />
+                <button class="btn btn-sm" id="btnAddReminder">新增提醒</button>
+              </div>
+            </div>
+          </div>` : ""}
+      `;
+
+      document.getElementById("collab-issues").innerHTML = `
+        <header class="admin-page-hero" style="margin-bottom:12px">
+          <div>
+            <h3 style="margin:0">Issue 跟踪</h3>
+            <p class="muted" style="margin:6px 0 0">支持状态流转与编辑抽屉（本地版）</p>
+          </div>
+          <div class="issue-hero-actions">
+            <button class="btn btn-primary btn-sm" id="btnAddIssue">新建 Issue</button>
+            <button class="btn btn-sm" id="btnIssueAskKnot">在 Knot 问 Issue</button>
+          </div>
+        </header>
+        <div class="bot-status" id="issueBotStatus">等待触发 Issue Bot...</div>
+        <div class="lite-form-row" style="margin-bottom:10px">
+          <input id="newIssueTitle" placeholder="Issue 标题" />
+          <select id="newIssueCountry"><option>US</option><option>CAN</option><option>SG</option></select>
+          <select id="newIssueSeverity"><option>high</option><option>medium</option><option>low</option></select>
+        </div>
+        <div class="panel issue-toolbar" style="margin-bottom:8px">
+          <span class="muted" id="issueListMeta">总计 ${state.issues.length} 条</span>
+        </div>
+        <div class="panel" style="padding:0;overflow:hidden">
+          <table class="issue-table">
+            <thead><tr><th>严重度</th><th>国家</th><th>Issue</th><th>状态</th><th>Owner</th><th>动作</th></tr></thead>
+            <tbody>
+              ${state.issues.map((i) => `
+                <tr>
+                  <td><span class="tag">${esc(i.severity)}</span></td>
+                  <td>${esc(i.country)}</td>
+                  <td><strong>${esc(i.title)}</strong><div class="muted" style="font-size:11px">${esc(i.id)}</div></td>
+                  <td>${esc(i.status)}</td>
+                  <td>${esc(i.owner || "未指定")}</td>
+                  <td>
+                    <button class="btn btn-sm" data-issue-next="${esc(i.id)}">下一状态</button>
+                    <button class="btn btn-sm" data-issue-close="${esc(i.id)}">关闭</button>
+                    <button class="btn btn-sm" data-issue-edit="${esc(i.id)}">编辑</button>
+                  </td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </div>
+        ${editingIssue ? `
+          <div class="panel issue-drawer-panel" style="margin-top:12px">
+            <div class="panel-head"><h3>Issue 编辑抽屉（简化）</h3></div>
+            <div class="lite-form-row">
+              <input id="editIssueTitle" value="${esc(editingIssue.title)}" />
+              <select id="editIssueCountry">
+                <option value="US" ${editingIssue.country === "US" ? "selected" : ""}>US</option>
+                <option value="CAN" ${editingIssue.country === "CAN" ? "selected" : ""}>CAN</option>
+                <option value="SG" ${editingIssue.country === "SG" ? "selected" : ""}>SG</option>
+                <option value="Global" ${editingIssue.country === "Global" ? "selected" : ""}>Global</option>
+              </select>
+              <select id="editIssueSeverity">
+                <option value="high" ${editingIssue.severity === "high" ? "selected" : ""}>high</option>
+                <option value="medium" ${editingIssue.severity === "medium" ? "selected" : ""}>medium</option>
+                <option value="low" ${editingIssue.severity === "low" ? "selected" : ""}>low</option>
+              </select>
+              <input id="editIssueOwner" value="${esc(editingIssue.owner || "")}" placeholder="负责人" />
+              <button class="btn btn-sm btn-primary" id="btnSaveIssueEdit">保存</button>
+              <button class="btn btn-sm" id="btnCancelIssueEdit">取消</button>
+            </div>
+          </div>` : ""}
+      `;
+
+      document.getElementById("collab-meetings").innerHTML = `
+        <header class="admin-page-hero meeting-hero" style="margin-bottom:12px">
+          <div>
+            <h3 style="margin:0">会议纪要与待办</h3>
+            <p class="muted" style="margin:6px 0 0">支持文本解析导入，并将待办一键转 Issue</p>
+          </div>
+          <div class="issue-hero-actions">
+            <button class="btn btn-primary btn-sm" id="btnAddMeeting">新增会议</button>
+            <button class="btn btn-sm" id="btnMeetingAskKnot">在 Knot 问会议待办</button>
+          </div>
+        </header>
+        <div class="bot-status" id="meetingBotStatus">等待触发会议 Bot...</div>
+        <div class="lite-form-row" style="margin-bottom:10px">
+          <input id="newMeetingTopic" placeholder="会议主题" />
+          <input id="newMeetingOwner" placeholder="主持人" />
+          <input id="newMeetingTodo" placeholder="待办事项" />
+        </div>
+        <div class="panel" style="margin-bottom:12px">
+          <div class="panel-head"><h3>纪要文本解析（无后端）</h3></div>
+          <textarea id="meetingRawInput" rows="4" style="width:100%;border:1px solid #cbd5e1;border-radius:10px;padding:8px" placeholder="粘贴纪要，例如：&#10;6/30 月结对齐会&#10;- 待办：更新分摊模板&#10;- TODO: 回填台账"></textarea>
+          <div class="lite-actions">
+            <button class="btn btn-sm" id="btnParseMeetingText">解析纪要</button>
+            ${meetingParsePreview ? '<button class="btn btn-sm btn-primary" id="btnImportParsedMeeting">导入为会议</button>' : ""}
+          </div>
+          ${meetingParsePreview ? `
+            <div class="lite-log">
+              主题：${esc(meetingParsePreview.topic)}
+              \n待办：${meetingParsePreview.todos.map((t, idx) => `\n${idx + 1}. ${esc(t)}`).join("")}
+            </div>` : ""}
+        </div>
+        <div class="lite-list">
+          ${state.meetings.map((m) => `
+            <div class="lite-item">
+              <strong>${esc(m.topic)}</strong> · ${esc(m.owner)} · <span class="tag">${esc(m.status)}</span>
+              <div style="margin-top:6px;font-size:12px">待办：${esc(m.todo)}</div>
+              <div class="lite-actions">
+                <button class="btn btn-sm" data-meeting-toggle="${esc(m.id)}">切换状态</button>
+                <button class="btn btn-sm" data-meeting-to-issue="${esc(m.id)}">转 Issue</button>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+
+      document.getElementById("btnAddProject").onclick = () => {
+        const name = document.getElementById("newProjName").value.trim();
+        if (!name) return;
+        state.projects.unshift({
+          id: `P-${String(Date.now()).slice(-4)}`,
+          name,
+          owner: document.getElementById("newProjOwner").value.trim() || "未指定",
+          status: document.getElementById("newProjStatus").value,
+          progress: 0,
+          summary: "",
+          due: "",
+          milestones: [],
+          reminders: []
+        });
+        addAudit("project.create", name);
+        saveState();
+        renderAll();
+      };
+      const renderProjectCards = () => {
+        const q = (document.getElementById("projectSearch")?.value || "").trim().toLowerCase();
+        const f = document.getElementById("projectStatusFilter")?.value || "";
+        const list = state.projects.filter((p) => {
+          const hit = !q || p.name.toLowerCase().includes(q) || String(p.owner || "").toLowerCase().includes(q);
+          const stat = !f || p.status === f;
+          return hit && stat;
+        });
+        const host = document.getElementById("projectCardsHost");
+        if (!host) return;
+        host.innerHTML = list.map((p) => `
+          <article class="panel">
+            <div class="panel-head">
+              <h3>${esc(p.name)}</h3>
+              <span class="badge">${esc(p.status)}</span>
+            </div>
+            <p class="muted">负责人：${esc(p.owner)} · 进度：${esc(p.progress)}% · 截止：${esc(p.due || "未设定")}</p>
+            <p class="muted">${esc(p.summary || "暂无摘要")}</p>
+            <div class="lite-actions">
+              <button class="btn btn-sm" data-proj-open="${esc(p.id)}">查看详情</button>
+            </div>
+          </article>
+        `).join("");
+        host.querySelectorAll("[data-proj-open]").forEach((btn) => {
+          btn.onclick = () => {
+            selectedProjectId = btn.dataset.projOpen;
+            renderAll();
+          };
+        });
+      };
+      renderProjectCards();
+      const searchInput = document.getElementById("projectSearch");
+      const statusFilter = document.getElementById("projectStatusFilter");
+      if (searchInput) searchInput.oninput = renderProjectCards;
+      if (statusFilter) statusFilter.onchange = renderProjectCards;
+
+      if (selectedProject) {
+        if (!Array.isArray(selectedProject.milestones)) selectedProject.milestones = [];
+        if (!Array.isArray(selectedProject.reminders)) selectedProject.reminders = [];
+        const btnSaveDetail = document.getElementById("btnSaveProjectDetail");
+        if (btnSaveDetail) {
+          btnSaveDetail.onclick = () => {
+            selectedProject.name = document.getElementById("projNameInput").value.trim() || selectedProject.name;
+            selectedProject.owner = document.getElementById("projOwnerInput").value.trim() || "未指定";
+            selectedProject.status = document.getElementById("projStatusInput").value;
+            selectedProject.due = document.getElementById("projDueInput").value || "";
+            selectedProject.progress = Math.max(0, Math.min(100, Number(document.getElementById("projProgressInput").value || 0)));
+            selectedProject.summary = document.getElementById("projSummaryInput").value.trim();
+            addAudit("project.detail_update", selectedProject.id);
+            saveState();
+            renderAll();
+          };
+        }
+        const btnCloseDetail = document.getElementById("btnCloseProjDetail");
+        if (btnCloseDetail) {
+          btnCloseDetail.onclick = () => {
+            selectedProjectId = null;
+            renderAll();
+          };
+        }
+        const milestoneHost = document.getElementById("projectMilestoneList");
+        if (milestoneHost) {
+          milestoneHost.innerHTML = (selectedProject.milestones || []).map((m, idx) => `
+            <div class="lite-item">
+              <strong>${esc(m.title)}</strong> · ${esc(m.due || "未设定")}
+              <span class="tag">${m.done ? "done" : "open"}</span>
+              <div class="lite-actions">
+                <button class="btn btn-sm" data-milestone-toggle="${idx}">切换状态</button>
+                <button class="btn btn-sm" data-milestone-del="${idx}">删除</button>
+              </div>
+            </div>
+          `).join("") || `<div class="muted">暂无里程碑</div>`;
+          milestoneHost.querySelectorAll("[data-milestone-toggle]").forEach((btn) => {
+            btn.onclick = () => {
+              const i = Number(btn.dataset.milestoneToggle);
+              const m = selectedProject.milestones[i];
+              if (!m) return;
+              m.done = !m.done;
+              addAudit("project.milestone_toggle", `${selectedProject.id}#${i}`);
+              saveState();
+              renderAll();
+            };
+          });
+          milestoneHost.querySelectorAll("[data-milestone-del]").forEach((btn) => {
+            btn.onclick = () => {
+              const i = Number(btn.dataset.milestoneDel);
+              selectedProject.milestones.splice(i, 1);
+              addAudit("project.milestone_delete", `${selectedProject.id}#${i}`);
+              saveState();
+              renderAll();
+            };
+          });
+        }
+        const btnAddMilestone = document.getElementById("btnAddMilestone");
+        if (btnAddMilestone) {
+          btnAddMilestone.onclick = () => {
+            const title = document.getElementById("newMilestoneTitle").value.trim();
+            if (!title) return;
+            selectedProject.milestones.push({
+              title,
+              due: document.getElementById("newMilestoneDue").value || "",
+              done: false
+            });
+            addAudit("project.milestone_add", selectedProject.id);
+            saveState();
+            renderAll();
+          };
+        }
+        const reminderHost = document.getElementById("projectReminderList");
+        if (reminderHost) {
+          reminderHost.innerHTML = (selectedProject.reminders || []).map((r, idx) => `
+            <div class="lite-item">
+              ${esc(r)}
+              <div class="lite-actions"><button class="btn btn-sm" data-reminder-del="${idx}">删除</button></div>
+            </div>
+          `).join("") || `<div class="muted">暂无提醒</div>`;
+          reminderHost.querySelectorAll("[data-reminder-del]").forEach((btn) => {
+            btn.onclick = () => {
+              const i = Number(btn.dataset.reminderDel);
+              selectedProject.reminders.splice(i, 1);
+              addAudit("project.reminder_delete", `${selectedProject.id}#${i}`);
+              saveState();
+              renderAll();
+            };
+          });
+        }
+        const btnAddReminder = document.getElementById("btnAddReminder");
+        if (btnAddReminder) {
+          btnAddReminder.onclick = () => {
+            const text = document.getElementById("newReminderText").value.trim();
+            if (!text) return;
+            selectedProject.reminders.push(text);
+            addAudit("project.reminder_add", selectedProject.id);
+            saveState();
+            renderAll();
+          };
+        }
+      }
+      document.getElementById("btnAddIssue").onclick = () => {
+        const title = document.getElementById("newIssueTitle").value.trim();
+        if (!title) return;
+        state.issues.unshift({ id: `I-${String(Date.now()).slice(-4)}`, title, country: document.getElementById("newIssueCountry").value, severity: document.getElementById("newIssueSeverity").value, status: "open", owner: "未指定" });
+        addAudit("issue.create", title);
+        saveState();
+        renderAll();
+      };
+      document.getElementById("btnAddMeeting").onclick = () => {
+        const topic = document.getElementById("newMeetingTopic").value.trim();
+        if (!topic) return;
+        state.meetings.unshift({ id: `M-${String(Date.now()).slice(-4)}`, topic, owner: document.getElementById("newMeetingOwner").value.trim() || "未指定", todo: document.getElementById("newMeetingTodo").value.trim() || "待补充", status: "进行中" });
+        addAudit("meeting.create", topic);
+        saveState();
+        renderAll();
+      };
+      document.querySelectorAll("[data-issue-next]").forEach((btn) => {
+        btn.onclick = () => {
+          const item = state.issues.find((i) => i.id === btn.dataset.issueNext);
+          if (!item) return;
+          const flow = ["open", "review", "closed"];
+          const idx = flow.indexOf(item.status);
+          item.status = flow[(idx + 1) % flow.length];
+          addAudit("issue.status", `${item.id} -> ${item.status}`);
+          saveState();
+          renderAll();
+        };
+      });
+      document.querySelectorAll("[data-issue-close]").forEach((btn) => {
+        btn.onclick = () => {
+          const item = state.issues.find((i) => i.id === btn.dataset.issueClose);
+          if (!item) return;
+          item.status = "closed";
+          addAudit("issue.close", item.id);
+          saveState();
+          renderAll();
+        };
+      });
+      document.querySelectorAll("[data-issue-edit]").forEach((btn) => {
+        btn.onclick = () => {
+          editingIssueId = btn.dataset.issueEdit;
+          renderAll();
+        };
+      });
+      if (editingIssue) {
+        const btnSaveIssue = document.getElementById("btnSaveIssueEdit");
+        if (btnSaveIssue) {
+          btnSaveIssue.onclick = () => {
+            editingIssue.title = document.getElementById("editIssueTitle").value.trim() || editingIssue.title;
+            editingIssue.country = document.getElementById("editIssueCountry").value;
+            editingIssue.severity = document.getElementById("editIssueSeverity").value;
+            editingIssue.owner = document.getElementById("editIssueOwner").value.trim() || "未指定";
+            addAudit("issue.edit", editingIssue.id);
+            saveState();
+            editingIssueId = null;
+            renderAll();
+          };
+        }
+        const btnCancelIssue = document.getElementById("btnCancelIssueEdit");
+        if (btnCancelIssue) {
+          btnCancelIssue.onclick = () => {
+            editingIssueId = null;
+            renderAll();
+          };
+        }
+      }
+      document.querySelectorAll("[data-meeting-toggle]").forEach((btn) => {
+        btn.onclick = () => {
+          const m = state.meetings.find((x) => x.id === btn.dataset.meetingToggle);
+          if (!m) return;
+          m.status = m.status === "完成" ? "进行中" : "完成";
+          addAudit("meeting.status", `${m.id} -> ${m.status}`);
+          saveState();
+          renderAll();
+        };
+      });
+      document.querySelectorAll("[data-meeting-to-issue]").forEach((btn) => {
+        btn.onclick = () => {
+          const m = state.meetings.find((x) => x.id === btn.dataset.meetingToIssue);
+          if (!m) return;
+          const title = `会议待办:${m.topic}`;
+          state.issues.unshift({
+            id: `I-${String(Date.now()).slice(-4)}`,
+            title,
+            country: "Global",
+            severity: "medium",
+            status: "open",
+            owner: m.owner || "未指定"
+          });
+          addAudit("meeting.todo_to_issue", m.id);
+          saveState();
+          renderAll();
+        };
+      });
+      const btnParseMeetingText = document.getElementById("btnParseMeetingText");
+      if (btnParseMeetingText) {
+        btnParseMeetingText.onclick = () => {
+          const text = document.getElementById("meetingRawInput").value;
+          meetingParsePreview = parseMeetingDraft(text);
+          if (!meetingParsePreview) return;
+          addAudit("meeting.parse", meetingParsePreview.topic);
+          renderAll();
+        };
+      }
+      const btnImportParsedMeeting = document.getElementById("btnImportParsedMeeting");
+      if (btnImportParsedMeeting) {
+        btnImportParsedMeeting.onclick = () => {
+          if (!meetingParsePreview) return;
+          state.meetings.unshift({
+            id: `M-${String(Date.now()).slice(-4)}`,
+            topic: meetingParsePreview.topic,
+            owner: "解析导入",
+            todo: meetingParsePreview.todos.join("；"),
+            status: "进行中"
+          });
+          addAudit("meeting.import", meetingParsePreview.topic);
+          meetingParsePreview = null;
+          saveState();
+          renderAll();
+        };
+      }
+      document.getElementById("btnProjAskKnot").onclick = async () => {
+        const pick = selectedProject || state.projects[0];
+        const prompt = pick
+          ? `汇总项目进展：${pick.name}，状态=${pick.status}，进度=${pick.progress}%，里程碑数=${pick.milestones?.length || 0}`
+          : "汇总当前项目看板风险与下一步建议";
+        await triggerBotAction("collab-projects", prompt, "project-agent", "projBotStatus");
+      };
+      document.getElementById("btnIssueAskKnot").onclick = async () => {
+        const openCount = state.issues.filter((i) => i.status !== "closed").length;
+        const prompt = `汇总 Issue 风险，未关闭数=${openCount}，请给出优先级和处置建议`;
+        await triggerBotAction("collab-issues", prompt, "issue-agent", "issueBotStatus");
+      };
+      document.getElementById("btnMeetingAskKnot").onclick = async () => {
+        const prompt = `汇总会议待办，会议数=${state.meetings.length}，请给出今日跟进顺序`;
+        await triggerBotAction("collab-meetings", prompt, "meeting-agent", "meetingBotStatus");
+      };
+    }
+
+    function renderSystem() {
+      document.getElementById("sys-mgmt").innerHTML = `
+        <div class="lite-kpis">
+          <div class="lite-kpi"><div class="k">项目数</div><div class="v">${state.projects.length}</div></div>
+          <div class="lite-kpi"><div class="k">Issue 数</div><div class="v">${state.issues.length}</div></div>
+          <div class="lite-kpi"><div class="k">会议数</div><div class="v">${state.meetings.length}</div></div>
+          <div class="lite-kpi"><div class="k">日志条数</div><div class="v">${state.audit.length}</div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h3>管理看板说明</h3></div>
+          <p class="muted">无 IOA 版本仅用于演示流程与交互，管理数据均为本地可编辑数据。</p>
+          <div class="link-grid">
+            <div class="link-item"><div class="k">Knot 总助手 Agent</div><a href="${KNOT_LINKS.knotMainAgent}" target="_blank" rel="noopener">${KNOT_LINKS.knotMainAgent}</a></div>
+            <div class="link-item"><div class="k">Knot 问答 Agent</div><a href="${KNOT_LINKS.knotQaAgent}" target="_blank" rel="noopener">${KNOT_LINKS.knotQaAgent}</a></div>
+            <div class="link-item"><div class="k">Knot 问答 Chat</div><a href="${KNOT_LINKS.knotQaChat}" target="_blank" rel="noopener">${KNOT_LINKS.knotQaChat}</a></div>
+            <div class="link-item"><div class="k">FPP 门户（原业务）</div><a href="${KNOT_LINKS.fppPortal}" target="_blank" rel="noopener">${KNOT_LINKS.fppPortal}</a></div>
+            <div class="link-item"><div class="k">工作台门户页</div><a href="${KNOT_LINKS.portalPage}" target="_blank" rel="noopener">${KNOT_LINKS.portalPage}</a></div>
+            <div class="link-item"><div class="k">工作台总览页</div><a href="${KNOT_LINKS.workbenchPage}" target="_blank" rel="noopener">${KNOT_LINKS.workbenchPage}</a></div>
+            <div class="link-item"><div class="k">API · Orchestrate</div><a href="${KNOT_LINKS.orchestrateApi}" target="_blank" rel="noopener">${KNOT_LINKS.orchestrateApi}</a></div>
+            <div class="link-item"><div class="k">API · Agent Registry</div><a href="${KNOT_LINKS.agentRegistryApi}" target="_blank" rel="noopener">${KNOT_LINKS.agentRegistryApi}</a></div>
+          </div>
+          <div class="lite-actions">
+            <button class="btn btn-sm" id="btnOpenKnotMain">打开 Knot 总助手</button>
+            <button class="btn btn-sm" id="btnOpenFppPortal">打开 FPP 门户</button>
+            <button class="btn btn-sm" id="btnRefreshAgents">刷新 Agent 列表</button>
+          </div>
+          <div class="panel" style="margin-top:10px">
+            <div class="panel-head"><h3>Agent Registry（实时）</h3></div>
+            <div id="agentRegistryPanel"><div class="muted">加载中...</div></div>
+          </div>
+        </div>`;
+
+      document.getElementById("sys-users").innerHTML = `
+        <div class="panel">
+          <div class="panel-head"><h3>用户管理</h3></div>
+          <div class="lite-form-row">
+            <input id="newUserName" placeholder="用户名" />
+            <select id="newUserRole"><option>viewer</option><option>operator</option><option>admin</option></select>
+            <select id="newUserType"><option>formal</option><option>intern</option></select>
+            <button class="btn btn-sm btn-primary" id="btnAddUser">新增用户</button>
+          </div>
+          <table class="admin-audit-table" style="margin-top:10px"><thead><tr><th>ID</th><th>姓名</th><th>角色</th><th>人员类型</th><th>动作</th></tr></thead><tbody>${state.users.map((u) => `
+            <tr>
+              <td>${esc(u.id)}</td>
+              <td>${esc(u.name)}</td>
+              <td>
+                <select data-user-role="${esc(u.id)}">
+                  <option value="viewer" ${u.role === "viewer" ? "selected" : ""}>viewer</option>
+                  <option value="operator" ${u.role === "operator" ? "selected" : ""}>operator</option>
+                  <option value="admin" ${u.role === "admin" ? "selected" : ""}>admin</option>
+                </select>
+              </td>
+              <td>${esc(u.staffType)}</td>
+              <td><button class="btn btn-sm" data-user-save="${esc(u.id)}">保存</button></td>
+            </tr>
+          `).join("")}</tbody></table>
+        </div>`;
+
+      document.getElementById("sys-perm").innerHTML = `
+        <div class="panel">
+          <div class="panel-head"><h3>权限矩阵（示例）</h3></div>
+          <table class="admin-audit-table"><thead><tr><th>模块</th><th>Viewer</th><th>Operator</th><th>Admin</th></tr></thead><tbody><tr><td>P1 区域工具</td><td>R</td><td>W</td><td>SA</td></tr><tr><td>P2 知识库</td><td>R</td><td>W</td><td>SA</td></tr><tr><td>P4 协同</td><td>R</td><td>W</td><td>SA</td></tr><tr><td>P5 系统管理</td><td>-</td><td>R</td><td>SA</td></tr></tbody></table>
+        </div>`;
+
+      document.getElementById("sys-audit").innerHTML = `
+        <div class="panel">
+          <div class="panel-head"><h3>操作日志</h3></div>
+          <table class="admin-audit-table"><thead><tr><th>时间</th><th>动作</th><th>详情</th></tr></thead><tbody>${(state.audit.length ? state.audit : [{ ts: nowText(), action: "system.init", detail: "初始化无 IOA 克隆页" }]).map((a) => `<tr><td>${esc(a.ts)}</td><td>${esc(a.action)}</td><td>${esc(a.detail)}</td></tr>`).join("")}</tbody></table>
+        </div>`;
+
+      document.getElementById("sys-access").innerHTML = `
+        <div class="panel">
+          <div class="panel-head"><h3>权限申请</h3></div>
+          <div class="lite-form-row">
+            <input id="reqName" placeholder="申请人" />
+            <select id="reqRole"><option>viewer</option><option>operator</option><option>admin</option></select>
+            <input id="reqReason" placeholder="申请理由" style="min-width:260px" />
+            <button class="btn btn-sm btn-primary" id="btnAddRequest">提交申请</button>
+          </div>
+          <table class="admin-audit-table" style="margin-top:10px"><thead><tr><th>时间</th><th>申请人</th><th>目标角色</th><th>理由</th><th>状态</th><th>审批动作</th></tr></thead><tbody>${state.accessRequests.map((r) => `
+            <tr>
+              <td>${esc(r.ts)}</td>
+              <td>${esc(r.name)}</td>
+              <td>${esc(r.role)}</td>
+              <td>${esc(r.reason)}</td>
+              <td>${esc(r.status)}</td>
+              <td>
+                <button class="btn btn-sm" data-req-approve="${esc(r.id || "")}" ${r.status !== "pending" ? "disabled" : ""}>通过</button>
+                <button class="btn btn-sm" data-req-reject="${esc(r.id || "")}" ${r.status !== "pending" ? "disabled" : ""}>驳回</button>
+              </td>
+            </tr>
+          `).join("") || '<tr><td colspan="6">暂无申请</td></tr>'}</tbody></table>
+        </div>`;
+
+      document.getElementById("btnAddUser").onclick = () => {
+        const name = document.getElementById("newUserName").value.trim();
+        if (!name) return;
+        state.users.unshift({ id: `U-${String(Date.now()).slice(-4)}`, name, role: document.getElementById("newUserRole").value, staffType: document.getElementById("newUserType").value });
+        addAudit("user.create", name);
+        saveState();
+        renderAll();
+      };
+      document.querySelectorAll("[data-user-save]").forEach((btn) => {
+        btn.onclick = () => {
+          const id = btn.dataset.userSave;
+          const user = state.users.find((u) => u.id === id);
+          if (!user) return;
+          const sel = document.querySelector(`[data-user-role="${id}"]`);
+          if (!sel) return;
+          user.role = sel.value;
+          addAudit("user.role_update", `${id} -> ${user.role}`);
+          saveState();
+          renderAll();
+        };
+      });
+      document.getElementById("btnAddRequest").onclick = () => {
+        const name = document.getElementById("reqName").value.trim();
+        if (!name) return;
+        const req = { id: `AR-${String(Date.now()).slice(-4)}`, ts: nowText(), name, role: document.getElementById("reqRole").value, reason: document.getElementById("reqReason").value.trim() || "未填写", status: "pending" };
+        state.accessRequests.unshift(req);
+        addAudit("access.request", `${req.name} -> ${req.role}`);
+        saveState();
+        renderAll();
+      };
+      document.querySelectorAll("[data-req-approve]").forEach((btn) => {
+        btn.onclick = () => {
+          const req = state.accessRequests.find((r) => r.id === btn.dataset.reqApprove);
+          if (!req || req.status !== "pending") return;
+          req.status = "approved";
+          state.users.unshift({
+            id: `U-${String(Date.now()).slice(-4)}`,
+            name: req.name,
+            role: req.role,
+            staffType: "formal"
+          });
+          addAudit("access.approve", `${req.name} -> ${req.role}`);
+          saveState();
+          renderAll();
+        };
+      });
+      document.querySelectorAll("[data-req-reject]").forEach((btn) => {
+        btn.onclick = () => {
+          const req = state.accessRequests.find((r) => r.id === btn.dataset.reqReject);
+          if (!req || req.status !== "pending") return;
+          req.status = "rejected";
+          addAudit("access.reject", `${req.name} -> ${req.role}`);
+          saveState();
+          renderAll();
+        };
+      });
+      document.getElementById("btnOpenKnotMain").onclick = () => openLink(KNOT_LINKS.knotMainAgent);
+      document.getElementById("btnOpenFppPortal").onclick = () => openLink(KNOT_LINKS.fppPortal);
+      document.getElementById("btnRefreshAgents").onclick = async () => {
+        agentRegistryState.loaded = false;
+        agentRegistryState.loading = false;
+        agentRegistryState.error = "";
+        agentRegistryState.agents = [];
+        await renderSystemAgentRegistry();
+        addAudit("agent_registry.refresh", "manual refresh");
+      };
+      renderSystemAgentRegistry();
+    }
+
+    function renderAll() {
+      renderHome();
+      renderKnowledge();
+      renderCollab();
+      renderSystem();
+      initHeaderControls();
+    }
+
+    function bindBaseEvents() {
+      document.querySelectorAll("#mainPanelRail .panel-rail-btn").forEach((btn) => {
+        btn.addEventListener("click", () => switchMainPanel(btn.dataset.panel));
+      });
+      document.querySelectorAll(".tools-switch-tab").forEach((btn) => btn.addEventListener("click", () => switchToolView(btn.dataset.target)));
+
+      document.querySelectorAll("#panelHome .sub-tab").forEach((btn) => btn.addEventListener("click", () => switchSubView(btn.dataset.sub, "#panelHome")));
+      document.querySelectorAll("#panelKnowledge .sub-tab").forEach((btn) => btn.addEventListener("click", () => switchSubView(btn.dataset.sub, "#panelKnowledge")));
+      document.querySelectorAll("#panelCollab .sub-tab").forEach((btn) => btn.addEventListener("click", () => switchSubView(btn.dataset.sub, "#panelCollab")));
+      document.querySelectorAll("#panelSystem .sub-tab").forEach((btn) => btn.addEventListener("click", () => switchSubView(btn.dataset.sub, "#panelSystem")));
+
+      document.getElementById("usBtnAlloc").addEventListener("click", () => {
+        const period = document.getElementById("usPeriod").value || "未填写";
+        document.getElementById("usLog").textContent = `[${nowText()}] US 自动分摊示例执行\n账单月: ${period}\n台账: ${fileName("usLedger")}\nP1人数: ${fileName("usP1")}`;
+      });
+      document.getElementById("usBtnSubmit").addEventListener("click", () => {
+        document.getElementById("usLog").textContent = `[${nowText()}] US 提单文本示例执行\n提单文件: ${fileName("usSubmission")}`;
+      });
+      document.getElementById("usDownloadSample").addEventListener("click", () => {
+        csvDownload("US_allocation_sample.csv", ["vendor", "period", "amount_usd", "cost_center", "status"], [["Vendor_A", "202607", "12400.00", "CC-1001", "ready"], ["Vendor_B", "202607", "8600.00", "CC-1002", "ready"]]);
+      });
+      document.getElementById("caBtnAlloc").addEventListener("click", () => {
+        const period = document.getElementById("caPeriod").value || "未填写";
+        document.getElementById("caLog").textContent = `[${nowText()}] CAN 自动分摊示例执行\n账单月: ${period}\n台账: ${fileName("caLedger")}\nP1人数: ${fileName("caP1")}`;
+      });
+      document.getElementById("caBtnSubmit").addEventListener("click", () => {
+        document.getElementById("caLog").textContent = `[${nowText()}] CAN 提单文本示例执行\n提单文件: ${fileName("caSubmission")}`;
+      });
+      document.getElementById("caDownloadSample").addEventListener("click", () => {
+        csvDownload("CAN_allocation_sample.csv", ["vendor", "period", "amount_cad", "cost_center", "status"], [["Vendor_CA_1", "202607", "5300.00", "CA-CC-01", "ready"], ["Vendor_CA_2", "202607", "4875.00", "CA-CC-07", "ready"]]);
+      });
+      document.getElementById("sgBtnRun").addEventListener("click", () => {
+        document.getElementById("sgLog").textContent = `[${nowText()}] SG EE Listing 摘要示例执行\nActive: ${fileName("sgActive")}\nTerminated: ${fileName("sgTerminated")}\n上月EE: ${fileName("sgLastEe")}`;
+      });
+      document.getElementById("sgDownloadTemplate").addEventListener("click", () => {
+        const text = "SG EE Listing 模板说明\n1) 上传 Active/Terminated/Last Month\n2) 字段建议: employee_id, legal_name, cost_center\n3) 输出标签: 新增/离职/冲突/缺失";
+        const blob = new Blob([text], { type: "text/plain;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "SG_eelisting_template_note.txt";
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+    }
+
+    const topbarDate = document.getElementById("topbarDate");
+    if (topbarDate) {
+      topbarDate.textContent = nowText();
+      setInterval(() => { topbarDate.textContent = nowText(); }, 60000);
+    }
+    bindBaseEvents();
+    renderAll();
+    renderGlobalSubRail("tools");
+  </script>
+</body>
+</html>
