@@ -1340,12 +1340,26 @@
     function csvDownload(filename, header, rows) {
       const content = [header.join(","), ...rows.map((r) => r.join(","))].join("\n");
       const blob = new Blob([content], { type: "text/csv;charset=utf-8;" });
+      downloadBlob(filename, blob);
+    }
+    function downloadBlob(filename, blob) {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
       a.download = filename;
+      a.style.display = "none";
+      document.body.appendChild(a);
       a.click();
-      URL.revokeObjectURL(url);
+      setTimeout(() => {
+        URL.revokeObjectURL(url);
+        a.remove();
+      }, 0);
+    }
+    function safeFileTs() {
+      return nowText().replace(/[-:\s]/g, "");
+    }
+    function downloadText(filename, text) {
+      downloadBlob(filename, new Blob([text], { type: "text/plain;charset=utf-8;" }));
     }
     function openLink(url) {
       window.open(url, "_blank", "noopener");
@@ -1780,13 +1794,7 @@
           const doc = (state.knowledgeDocs || []).find((d) => d.id === btn.dataset.kbDocDownload);
           if (!doc) return;
           const text = `${doc.title}\n\n类型: ${doc.type}\n状态: ${doc.status}\n更新: ${doc.updated}\n\n${doc.content || ""}`;
-          const blob = new Blob([text], { type: "text/plain;charset=utf-8;" });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = `${doc.id}_${doc.title}.txt`;
-          a.click();
-          URL.revokeObjectURL(url);
+          downloadText(`${doc.id}_${doc.title}.txt`, text);
           addAudit("kb.doc.download", doc.id);
         };
       });
@@ -2456,7 +2464,12 @@
         executeToolAction("us", "auto_allocation", `US 自动分摊示例执行\n账单月: ${period}\n台账: ${fileName("usLedger")}\nP1人数: ${fileName("usP1")}`, "usLog");
       });
       document.getElementById("usBtnSubmit").addEventListener("click", () => {
+        const content = `US 提单文本\n生成时间: ${nowText()}\n提单文件: ${fileName("usSubmission")}\n\n建议动作:\n1) 校验金额与成本中心\n2) 提交审批后归档`;
         executeToolAction("us", "submission_text", `US 提单文本示例执行\n提单文件: ${fileName("usSubmission")}`, "usLog");
+        downloadText(`US_submission_${safeFileTs()}.txt`, content);
+        addToolRun("us", "download_submission", "自动下载 US 提单文本");
+        renderToolHistory("us");
+        renderToolMetrics("us");
       });
       document.getElementById("usDownloadSample").addEventListener("click", () => {
         csvDownload("US_allocation_sample.csv", ["vendor", "period", "amount_usd", "cost_center", "status"], [["Vendor_A", "202607", "12400.00", "CC-1001", "ready"], ["Vendor_B", "202607", "8600.00", "CC-1002", "ready"]]);
@@ -2469,7 +2482,12 @@
         executeToolAction("ca", "auto_allocation", `CAN 自动分摊示例执行\n账单月: ${period}\n台账: ${fileName("caLedger")}\nP1人数: ${fileName("caP1")}`, "caLog");
       });
       document.getElementById("caBtnSubmit").addEventListener("click", () => {
+        const content = `CAN 提单文本\n生成时间: ${nowText()}\n提单文件: ${fileName("caSubmission")}\n\n建议动作:\n1) 校验 CAD 金额与项目编码\n2) 提交审批后归档`;
         executeToolAction("ca", "submission_text", `CAN 提单文本示例执行\n提单文件: ${fileName("caSubmission")}`, "caLog");
+        downloadText(`CAN_submission_${safeFileTs()}.txt`, content);
+        addToolRun("ca", "download_submission", "自动下载 CAN 提单文本");
+        renderToolHistory("ca");
+        renderToolMetrics("ca");
       });
       document.getElementById("caDownloadSample").addEventListener("click", () => {
         csvDownload("CAN_allocation_sample.csv", ["vendor", "period", "amount_cad", "cost_center", "status"], [["Vendor_CA_1", "202607", "5300.00", "CA-CC-01", "ready"], ["Vendor_CA_2", "202607", "4875.00", "CA-CC-07", "ready"]]);
@@ -2478,17 +2496,16 @@
         renderToolMetrics("ca");
       });
       document.getElementById("sgBtnRun").addEventListener("click", () => {
+        const summary = `SG EE Listing 摘要\n生成时间: ${nowText()}\nActive: ${fileName("sgActive")}\nTerminated: ${fileName("sgTerminated")}\n上月EE: ${fileName("sgLastEe")}\n\n输出标签: 新增 / 离职 / 冲突 / 缺失`;
         executeToolAction("sg", "ee_listing_summary", `SG EE Listing 摘要示例执行\nActive: ${fileName("sgActive")}\nTerminated: ${fileName("sgTerminated")}\n上月EE: ${fileName("sgLastEe")}`, "sgLog");
+        downloadText(`SG_ee_summary_${safeFileTs()}.txt`, summary);
+        addToolRun("sg", "download_summary", "自动下载 SG 摘要文档");
+        renderToolHistory("sg");
+        renderToolMetrics("sg");
       });
       document.getElementById("sgDownloadTemplate").addEventListener("click", () => {
         const text = "SG EE Listing 模板说明\n1) 上传 Active/Terminated/Last Month\n2) 字段建议: employee_id, legal_name, cost_center\n3) 输出标签: 新增/离职/冲突/缺失";
-        const blob = new Blob([text], { type: "text/plain;charset=utf-8;" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "SG_eelisting_template_note.txt";
-        a.click();
-        URL.revokeObjectURL(url);
+        downloadText("SG_eelisting_template_note.txt", text);
         addToolRun("sg", "download_template", "下载 SG 提交模板说明");
         renderToolHistory("sg");
         renderToolMetrics("sg");
