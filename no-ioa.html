@@ -3,21 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SSC 工作台 · 无 IOA 共享版</title>
+  <title>SSC 工作台 · 共享版</title>
   <link rel="stylesheet" href="tokens.css?v=8a0f394" />
   <link rel="stylesheet" href="console-shell.css?v=8a0f394" />
   <link rel="stylesheet" href="app.css?v=8a0f394" />
   <style>
-    .lite-warning {
-      margin: 10px 0 14px;
-      padding: 12px 14px;
-      border: 1px solid #bfdbfe;
-      background: #eff6ff;
-      color: #1e3a8a;
-      border-radius: 12px;
-      font-size: 12px;
-      line-height: 1.6;
-    }
     .panel-section,
     .sub-view,
     .lite-view {
@@ -544,7 +534,7 @@
               </div>
 
               <div id="usView" class="lite-view active">
-                <div class="tools-region-banner americas"><h3>美国工作区 · 分摊 / 提单</h3><p>与原版一致的操作结构，示例执行不依赖后端。</p></div>
+                <div class="tools-region-banner americas"><h3>美国工作区 · 分摊 / 提单</h3></div>
                 <div class="panel allocation-ops-panel">
                   <div class="rt-auto-bar"><span class="rt-auto-label">自动化</span><button type="button" class="btn btn-primary" id="usBtnAlloc">⚡ 动作1 · 批量自动分摊</button><button type="button" class="btn" id="usBtnSubmit">📋 动作2 · 生成提单文本</button></div>
                   <div class="rt-workspace">
@@ -581,7 +571,7 @@
               </div>
 
               <div id="caView" class="lite-view">
-                <div class="tools-region-banner americas"><h3>加拿大工作区 · 分摊 / 提单</h3><p>与美国同动作，区域固定 CAN。</p></div>
+                <div class="tools-region-banner americas"><h3>加拿大工作区 · 分摊 / 提单</h3></div>
                 <div class="panel allocation-ops-panel">
                   <div class="rt-auto-bar"><span class="rt-auto-label">自动化</span><button type="button" class="btn btn-primary" id="caBtnAlloc">⚡ 动作1 · 批量自动分摊</button><button type="button" class="btn" id="caBtnSubmit">📋 动作2 · 生成提单文本</button></div>
                   <div class="rt-workspace">
@@ -618,7 +608,7 @@
               </div>
 
               <div id="sgView" class="lite-view">
-                <div class="tools-region-banner non-americas"><h3>新加坡工作区 · EE Listing</h3><p>前端示例生成清洗摘要和模板说明。</p></div>
+                <div class="tools-region-banner non-americas"><h3>新加坡工作区 · EE Listing</h3></div>
                 <div class="panel allocation-ops-panel">
                   <div class="rt-auto-bar"><span class="rt-auto-label">自动化</span><button type="button" class="btn btn-primary" id="sgBtnRun">⚡ 一键生成 EE Listing 摘要</button></div>
                   <div class="rt-workspace">
@@ -1202,7 +1192,6 @@
           <div class="panel-head">
             <h3>知识缺口识别与生产 · Knowledge Gap Finder</h3>
           </div>
-          <p class="muted" style="margin:0 0 8px">从“知识缺失导致问题”到“主动补齐知识缺口”。</p>
 
           <div class="kgf-kpi-grid">
             <div class="kgf-kpi-card"><div class="k">待补缺口</div><div class="v">${totalCnt}</div><div class="muted">高优 ${highCnt}</div></div>
@@ -1213,9 +1202,9 @@
 
           <p class="section-title">知识缺口的 3 个识别来源</p>
           <div class="kgf-three-grid">
-            <div class="kgf-source-card bot"><strong>Chatbot 未命中</strong><p class="muted">员工提问无法匹配知识，未命中率高即触发补缺。</p></div>
-            <div class="kgf-source-card ex"><strong>Exception Case</strong><p class="muted">同类工单反复出现，说明操作指引不清晰。</p></div>
-            <div class="kgf-source-card pm"><strong>PM 经验判断</strong><p class="muted">新政策刚上线，需预建知识沉淀。</p></div>
+            <div class="kgf-source-card bot"><strong>Chatbot 未命中</strong></div>
+            <div class="kgf-source-card ex"><strong>Exception Case</strong></div>
+            <div class="kgf-source-card pm"><strong>PM 经验判断</strong></div>
           </div>
 
           <div class="kgf-main-grid">
@@ -1257,7 +1246,6 @@
       document.getElementById("kb-qa").innerHTML = `
         <div class="panel">
           <div class="panel-head"><h3>问答入口 · Knot / Agent 链接已迁移</h3></div>
-          <p class="muted">无 IOA 版本不做鉴权，但保留原页面的 Knot/Agent 入口，方便你和同事直接跳转。</p>
           <div class="lite-actions">
             <a class="btn btn-sm" href="${KNOT_LINKS.qaPage}" target="_blank" rel="noopener">打开 qa.html</a>
             <button class="btn btn-sm" id="btnOpenKnotQaChat">打开 Knot 问答 Chat</button>
@@ -1306,7 +1294,6 @@
         <header class="admin-page-hero" style="margin-bottom:12px">
           <div>
             <h3 style="margin:0">项目看板</h3>
-            <p class="muted" style="margin:6px 0 0">第一批功能恢复：筛选、详情编辑、里程碑、提醒（本地持久化）</p>
           </div>
           <div class="issue-hero-actions">
             <button class="btn btn-primary btn-sm" id="btnAddProject">新建项目</button>
@@ -1372,7 +1359,6 @@
         <header class="admin-page-hero" style="margin-bottom:12px">
           <div>
             <h3 style="margin:0">Issue 跟踪</h3>
-            <p class="muted" style="margin:6px 0 0">支持状态流转与编辑抽屉（本地版）</p>
           </div>
           <div class="issue-hero-actions">
             <button class="btn btn-primary btn-sm" id="btnAddIssue">新建 Issue</button>
@@ -1436,7 +1422,6 @@
         <header class="admin-page-hero meeting-hero" style="margin-bottom:12px">
           <div>
             <h3 style="margin:0">会议纪要与待办</h3>
-            <p class="muted" style="margin:6px 0 0">支持文本解析导入，并将待办一键转 Issue</p>
           </div>
           <div class="issue-hero-actions">
             <button class="btn btn-primary btn-sm" id="btnAddMeeting">新增会议</button>
@@ -1780,8 +1765,7 @@
           <div class="lite-kpi"><div class="k">日志条数</div><div class="v">${state.audit.length}</div></div>
         </div>
         <div class="panel">
-          <div class="panel-head"><h3>管理看板说明</h3></div>
-          <p class="muted">无 IOA 版本仅用于演示流程与交互，管理数据均为本地可编辑数据。</p>
+          <div class="panel-head"><h3>管理看板</h3></div>
           <div class="link-grid">
             <div class="link-item"><div class="k">Knot 总助手 Agent</div><a href="${KNOT_LINKS.knotMainAgent}" target="_blank" rel="noopener">${KNOT_LINKS.knotMainAgent}</a></div>
             <div class="link-item"><div class="k">Knot 问答 Agent</div><a href="${KNOT_LINKS.knotQaAgent}" target="_blank" rel="noopener">${KNOT_LINKS.knotQaAgent}</a></div>
@@ -1838,7 +1822,7 @@
       document.getElementById("sys-audit").innerHTML = `
         <div class="panel">
           <div class="panel-head"><h3>操作日志</h3></div>
-          <table class="admin-audit-table"><thead><tr><th>时间</th><th>动作</th><th>详情</th></tr></thead><tbody>${(state.audit.length ? state.audit : [{ ts: nowText(), action: "system.init", detail: "初始化无 IOA 共享页" }]).map((a) => `<tr><td>${esc(a.ts)}</td><td>${esc(a.action)}</td><td>${esc(a.detail)}</td></tr>`).join("")}</tbody></table>
+          <table class="admin-audit-table"><thead><tr><th>时间</th><th>动作</th><th>详情</th></tr></thead><tbody>${(state.audit.length ? state.audit : [{ ts: nowText(), action: "system.init", detail: "初始化共享页" }]).map((a) => `<tr><td>${esc(a.ts)}</td><td>${esc(a.action)}</td><td>${esc(a.detail)}</td></tr>`).join("")}</tbody></table>
         </div>`;
 
       document.getElementById("sys-access").innerHTML = `
