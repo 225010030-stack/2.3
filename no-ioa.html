@@ -432,8 +432,8 @@
       margin-top: 10px;
     }
     .rt-step-title {
-      margin: 10px 0 8px;
-      font-size: 13px;
+      margin: 8px 0 6px;
+      font-size: 12px;
       font-weight: 700;
       color: #1e293b;
       display: flex;
@@ -447,6 +447,19 @@
       border-radius: 999px;
       background: #3b82f6;
       display: inline-block;
+    }
+    .rt-l3-title {
+      margin: 12px 0 8px;
+      font-size: 14px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: 0.01em;
+    }
+    .rt-step-group {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      background: #fff;
+      padding: 10px;
     }
     .tools-region-banner {
       border-radius: 12px;
@@ -478,6 +491,52 @@
       color: #64748b;
       font-size: 11px;
       margin-bottom: 2px;
+    }
+    .ops-dashboard-grid {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 10px;
+    }
+    .ops-viz-card {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      background: #fff;
+      padding: 10px;
+    }
+    .ops-viz-card h4 {
+      margin: 0 0 8px;
+      font-size: 13px;
+      color: #0f172a;
+    }
+    .heatmap-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+    .heat-cell {
+      height: 14px;
+      border-radius: 4px;
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+    }
+    .board-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .board-col {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      background: #f8fafc;
+      padding: 8px;
+      font-size: 12px;
+      color: #334155;
+    }
+    .board-col .k {
+      font-size: 11px;
+      color: #64748b;
+      margin-bottom: 3px;
     }
     .tools-mini-card {
       border: 1px solid #e2e8f0;
@@ -517,6 +576,9 @@
     }
     @media (max-width: 980px) {
       .tools-ops-grid {
+        grid-template-columns: 1fr;
+      }
+      .ops-dashboard-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -584,27 +646,39 @@
               <div id="usView" class="lite-view active">
                 <div class="tools-region-banner americas"><h3>美国工作区 · 分摊 / 提单</h3></div>
                 <div class="panel allocation-ops-panel">
-                  <h4 class="rt-step-title">步骤一 · 执行动作</h4>
-                  <div class="rt-auto-bar"><span class="rt-auto-label">自动化</span><button type="button" class="btn btn-primary" id="usBtnAlloc">⚡ 动作1 · 批量自动分摊</button><button type="button" class="btn" id="usBtnSubmit">📋 动作2 · 生成提单文本</button></div>
                   <div class="rt-workspace">
-                    <h4 class="rt-step-title">步骤二 · 上传输入文件</h4>
-                    <div class="rt-form-grid">
-                      <label class="rt-field">账单月 YYYYMM<input type="text" id="usPeriod" maxlength="6" placeholder="202607" /></label>
-                      <label class="rt-field rt-span2">台账 CSV<input type="file" id="usLedger" accept=".csv,text/csv" /></label>
-                      <label class="rt-field rt-span2">P1 人数 CSV<input type="file" id="usP1" accept=".csv,text/csv" /></label>
-                      <label class="rt-field rt-span2">提单 CSV<input type="file" id="usSubmission" accept=".csv,text/csv" /></label>
+                    <h3 class="rt-l3-title">操作步骤</h3>
+                    <div class="rt-step-group">
+                      <h4 class="rt-step-title">步骤一 · 执行动作</h4>
+                      <div class="rt-auto-bar"><span class="rt-auto-label">自动化</span><button type="button" class="btn btn-primary" id="usBtnAlloc">⚡ 动作1 · 批量自动分摊</button><button type="button" class="btn" id="usBtnSubmit">📋 动作2 · 生成提单文本</button></div>
+                      <h4 class="rt-step-title">步骤二 · 上传输入文件</h4>
+                      <div class="rt-form-grid">
+                        <label class="rt-field">账单月 YYYYMM<input type="text" id="usPeriod" maxlength="6" placeholder="202607" /></label>
+                        <label class="rt-field rt-span2">台账 CSV<input type="file" id="usLedger" accept=".csv,text/csv" /></label>
+                        <label class="rt-field rt-span2">P1 人数 CSV<input type="file" id="usP1" accept=".csv,text/csv" /></label>
+                        <label class="rt-field rt-span2">提单 CSV<input type="file" id="usSubmission" accept=".csv,text/csv" /></label>
+                      </div>
+                      <h4 class="rt-step-title">步骤三 · 结果输出</h4>
+                      <div class="lite-actions"><button type="button" class="btn btn-sm" id="usDownloadSample">下载示例结果 CSV</button></div>
+                      <div class="lite-log" id="usLog">等待执行…</div>
                     </div>
-                    <h4 class="rt-step-title">步骤三 · 结果输出</h4>
-                    <div class="lite-actions"><button type="button" class="btn btn-sm" id="usDownloadSample">下载示例结果 CSV</button></div>
-                    <div class="lite-log" id="usLog">等待执行…</div>
+
+                    <h3 class="rt-l3-title">运营看板</h3>
                     <div class="tools-ops-grid">
                       <section class="tools-mini-card">
-                        <h4>步骤四 · 执行历史</h4>
+                        <h4>执行历史</h4>
                         <div id="usHistoryList" class="tools-mini-list"></div>
-                        <div class="tools-mini-actions"><button type="button" class="btn btn-sm" data-export-history="us">导出历史</button><button type="button" class="btn btn-sm" data-clear-history="us">清空历史</button></div>
+                        <div class="tools-mini-actions">
+                          <button type="button" class="btn btn-sm" data-export-history="us">导出当前</button>
+                          <button type="button" class="btn btn-sm" data-clear-history="us">清空历史</button>
+                        </div>
+                        <div class="lite-form-row" style="margin-top:8px">
+                          <select id="usHistoryVersion"></select>
+                          <button type="button" class="btn btn-sm" data-download-history-version="us">下载版本</button>
+                        </div>
                       </section>
                       <section class="tools-mini-card">
-                        <h4>步骤五 · 定期提醒</h4>
+                        <h4>定期提醒</h4>
                         <div class="lite-form-row" style="margin-top:0">
                           <input id="usReminderText" placeholder="例如：周会前复核 US 分摊" />
                           <select id="usReminderInterval">
@@ -617,8 +691,18 @@
                         <div id="usReminderList" class="tools-mini-list"></div>
                       </section>
                       <section class="tools-mini-card">
-                        <h4>步骤六 · 执行统计</h4>
+                        <h4>执行统计</h4>
                         <div id="usMetric" class="tools-metric"></div>
+                      </section>
+                    </div>
+                    <div class="ops-dashboard-grid">
+                      <section class="ops-viz-card">
+                        <h4>执行热力图（近 4 周）</h4>
+                        <div id="usHeatmap" class="heatmap-grid"></div>
+                      </section>
+                      <section class="ops-viz-card">
+                        <h4>运营看板</h4>
+                        <div id="usBoard" class="board-grid"></div>
                       </section>
                     </div>
                   </div>
@@ -628,27 +712,39 @@
               <div id="caView" class="lite-view">
                 <div class="tools-region-banner americas"><h3>加拿大工作区 · 分摊 / 提单</h3></div>
                 <div class="panel allocation-ops-panel">
-                  <h4 class="rt-step-title">步骤一 · 执行动作</h4>
-                  <div class="rt-auto-bar"><span class="rt-auto-label">自动化</span><button type="button" class="btn btn-primary" id="caBtnAlloc">⚡ 动作1 · 批量自动分摊</button><button type="button" class="btn" id="caBtnSubmit">📋 动作2 · 生成提单文本</button></div>
                   <div class="rt-workspace">
-                    <h4 class="rt-step-title">步骤二 · 上传输入文件</h4>
-                    <div class="rt-form-grid">
-                      <label class="rt-field">账单月 YYYYMM<input type="text" id="caPeriod" maxlength="6" placeholder="202607" /></label>
-                      <label class="rt-field rt-span2">台账 CSV<input type="file" id="caLedger" accept=".csv,text/csv" /></label>
-                      <label class="rt-field rt-span2">P1 人数 CSV<input type="file" id="caP1" accept=".csv,text/csv" /></label>
-                      <label class="rt-field rt-span2">提单 CSV<input type="file" id="caSubmission" accept=".csv,text/csv" /></label>
+                    <h3 class="rt-l3-title">操作步骤</h3>
+                    <div class="rt-step-group">
+                      <h4 class="rt-step-title">步骤一 · 执行动作</h4>
+                      <div class="rt-auto-bar"><span class="rt-auto-label">自动化</span><button type="button" class="btn btn-primary" id="caBtnAlloc">⚡ 动作1 · 批量自动分摊</button><button type="button" class="btn" id="caBtnSubmit">📋 动作2 · 生成提单文本</button></div>
+                      <h4 class="rt-step-title">步骤二 · 上传输入文件</h4>
+                      <div class="rt-form-grid">
+                        <label class="rt-field">账单月 YYYYMM<input type="text" id="caPeriod" maxlength="6" placeholder="202607" /></label>
+                        <label class="rt-field rt-span2">台账 CSV<input type="file" id="caLedger" accept=".csv,text/csv" /></label>
+                        <label class="rt-field rt-span2">P1 人数 CSV<input type="file" id="caP1" accept=".csv,text/csv" /></label>
+                        <label class="rt-field rt-span2">提单 CSV<input type="file" id="caSubmission" accept=".csv,text/csv" /></label>
+                      </div>
+                      <h4 class="rt-step-title">步骤三 · 结果输出</h4>
+                      <div class="lite-actions"><button type="button" class="btn btn-sm" id="caDownloadSample">下载示例结果 CSV</button></div>
+                      <div class="lite-log" id="caLog">等待执行…</div>
                     </div>
-                    <h4 class="rt-step-title">步骤三 · 结果输出</h4>
-                    <div class="lite-actions"><button type="button" class="btn btn-sm" id="caDownloadSample">下载示例结果 CSV</button></div>
-                    <div class="lite-log" id="caLog">等待执行…</div>
+
+                    <h3 class="rt-l3-title">运营看板</h3>
                     <div class="tools-ops-grid">
                       <section class="tools-mini-card">
-                        <h4>步骤四 · 执行历史</h4>
+                        <h4>执行历史</h4>
                         <div id="caHistoryList" class="tools-mini-list"></div>
-                        <div class="tools-mini-actions"><button type="button" class="btn btn-sm" data-export-history="ca">导出历史</button><button type="button" class="btn btn-sm" data-clear-history="ca">清空历史</button></div>
+                        <div class="tools-mini-actions">
+                          <button type="button" class="btn btn-sm" data-export-history="ca">导出当前</button>
+                          <button type="button" class="btn btn-sm" data-clear-history="ca">清空历史</button>
+                        </div>
+                        <div class="lite-form-row" style="margin-top:8px">
+                          <select id="caHistoryVersion"></select>
+                          <button type="button" class="btn btn-sm" data-download-history-version="ca">下载版本</button>
+                        </div>
                       </section>
                       <section class="tools-mini-card">
-                        <h4>步骤五 · 定期提醒</h4>
+                        <h4>定期提醒</h4>
                         <div class="lite-form-row" style="margin-top:0">
                           <input id="caReminderText" placeholder="例如：提交前校验 CAN 字段映射" />
                           <select id="caReminderInterval">
@@ -661,8 +757,18 @@
                         <div id="caReminderList" class="tools-mini-list"></div>
                       </section>
                       <section class="tools-mini-card">
-                        <h4>步骤六 · 执行统计</h4>
+                        <h4>执行统计</h4>
                         <div id="caMetric" class="tools-metric"></div>
+                      </section>
+                    </div>
+                    <div class="ops-dashboard-grid">
+                      <section class="ops-viz-card">
+                        <h4>执行热力图（近 4 周）</h4>
+                        <div id="caHeatmap" class="heatmap-grid"></div>
+                      </section>
+                      <section class="ops-viz-card">
+                        <h4>运营看板</h4>
+                        <div id="caBoard" class="board-grid"></div>
                       </section>
                     </div>
                   </div>
@@ -672,26 +778,38 @@
               <div id="sgView" class="lite-view">
                 <div class="tools-region-banner non-americas"><h3>新加坡工作区 · EE Listing</h3></div>
                 <div class="panel allocation-ops-panel">
-                  <h4 class="rt-step-title">步骤一 · 执行动作</h4>
-                  <div class="rt-auto-bar"><span class="rt-auto-label">自动化</span><button type="button" class="btn btn-primary" id="sgBtnRun">⚡ 一键生成 EE Listing 摘要</button></div>
                   <div class="rt-workspace">
-                    <h4 class="rt-step-title">步骤二 · 上传输入文件</h4>
-                    <div class="rt-form-grid">
-                      <label class="rt-field rt-span2">① Active Employee Report<input type="file" id="sgActive" accept=".xlsx" /></label>
-                      <label class="rt-field rt-span2">② Terminated Report<input type="file" id="sgTerminated" accept=".xlsx" /></label>
-                      <label class="rt-field rt-span2">③ 上月 EE Listing<input type="file" id="sgLastEe" accept=".xlsx" /></label>
+                    <h3 class="rt-l3-title">操作步骤</h3>
+                    <div class="rt-step-group">
+                      <h4 class="rt-step-title">步骤一 · 执行动作</h4>
+                      <div class="rt-auto-bar"><span class="rt-auto-label">自动化</span><button type="button" class="btn btn-primary" id="sgBtnRun">⚡ 一键生成 EE Listing 摘要</button></div>
+                      <h4 class="rt-step-title">步骤二 · 上传输入文件</h4>
+                      <div class="rt-form-grid">
+                        <label class="rt-field rt-span2">① Active Employee Report<input type="file" id="sgActive" accept=".xlsx" /></label>
+                        <label class="rt-field rt-span2">② Terminated Report<input type="file" id="sgTerminated" accept=".xlsx" /></label>
+                        <label class="rt-field rt-span2">③ 上月 EE Listing<input type="file" id="sgLastEe" accept=".xlsx" /></label>
+                      </div>
+                      <h4 class="rt-step-title">步骤三 · 结果输出</h4>
+                      <div class="lite-actions"><button type="button" class="btn btn-sm" id="sgDownloadTemplate">下载提交模板说明</button></div>
+                      <div class="lite-log" id="sgLog">等待执行…</div>
                     </div>
-                    <h4 class="rt-step-title">步骤三 · 结果输出</h4>
-                    <div class="lite-actions"><button type="button" class="btn btn-sm" id="sgDownloadTemplate">下载提交模板说明</button></div>
-                    <div class="lite-log" id="sgLog">等待执行…</div>
+
+                    <h3 class="rt-l3-title">运营看板</h3>
                     <div class="tools-ops-grid">
                       <section class="tools-mini-card">
-                        <h4>步骤四 · 执行历史</h4>
+                        <h4>执行历史</h4>
                         <div id="sgHistoryList" class="tools-mini-list"></div>
-                        <div class="tools-mini-actions"><button type="button" class="btn btn-sm" data-export-history="sg">导出历史</button><button type="button" class="btn btn-sm" data-clear-history="sg">清空历史</button></div>
+                        <div class="tools-mini-actions">
+                          <button type="button" class="btn btn-sm" data-export-history="sg">导出当前</button>
+                          <button type="button" class="btn btn-sm" data-clear-history="sg">清空历史</button>
+                        </div>
+                        <div class="lite-form-row" style="margin-top:8px">
+                          <select id="sgHistoryVersion"></select>
+                          <button type="button" class="btn btn-sm" data-download-history-version="sg">下载版本</button>
+                        </div>
                       </section>
                       <section class="tools-mini-card">
-                        <h4>步骤五 · 定期提醒</h4>
+                        <h4>定期提醒</h4>
                         <div class="lite-form-row" style="margin-top:0">
                           <input id="sgReminderText" placeholder="例如：每日报送前核对离职名单" />
                           <select id="sgReminderInterval">
@@ -704,8 +822,18 @@
                         <div id="sgReminderList" class="tools-mini-list"></div>
                       </section>
                       <section class="tools-mini-card">
-                        <h4>步骤六 · 执行统计</h4>
+                        <h4>执行统计</h4>
                         <div id="sgMetric" class="tools-metric"></div>
+                      </section>
+                    </div>
+                    <div class="ops-dashboard-grid">
+                      <section class="ops-viz-card">
+                        <h4>执行热力图（近 4 周）</h4>
+                        <div id="sgHeatmap" class="heatmap-grid"></div>
+                      </section>
+                      <section class="ops-viz-card">
+                        <h4>运营看板</h4>
+                        <div id="sgBoard" class="board-grid"></div>
                       </section>
                     </div>
                   </div>
@@ -840,6 +968,7 @@
         { id: "TR-001", region: "us", text: "复核 US 分摊差异再提交", intervalMin: 1440, nextTs: Date.now() + 3600 * 1000, enabled: true },
         { id: "TR-002", region: "ca", text: "检查 CAN 成本中心映射", intervalMin: 1440, nextTs: Date.now() + 2 * 3600 * 1000, enabled: true }
       ],
+      toolHistorySnapshots: [],
       audit: []
     };
 
@@ -878,12 +1007,34 @@
       state.toolRuns.unshift({
         id: `RUN-${String(Date.now()).slice(-6)}`,
         ts: nowText(),
+        at: Date.now(),
         region,
         action,
         detail
       });
       state.toolRuns = state.toolRuns.slice(0, 120);
+      snapshotToolHistory(region);
       saveState();
+    }
+    function snapshotToolHistory(region) {
+      state.toolHistorySnapshots = Array.isArray(state.toolHistorySnapshots) ? state.toolHistorySnapshots : [];
+      const rows = (state.toolRuns || [])
+        .filter((r) => r.region === region)
+        .slice(0, 120)
+        .map((r) => ({ ts: r.ts, action: r.action, detail: r.detail }));
+      state.toolHistorySnapshots.unshift({
+        id: `HSV-${String(Date.now()).slice(-8)}`,
+        region,
+        ts: nowText(),
+        rows
+      });
+      const cap = { us: 0, ca: 0, sg: 0 };
+      state.toolHistorySnapshots = state.toolHistorySnapshots.filter((s) => {
+        if (!cap.hasOwnProperty(s.region)) return false;
+        if (cap[s.region] >= 15) return false;
+        cap[s.region] += 1;
+        return true;
+      });
     }
     function renderToolHistory(region) {
       const host = document.getElementById(`${region}HistoryList`);
@@ -901,6 +1052,12 @@
         ? list.map((r) => `<div class="tools-mini-item"><strong>${esc(r.text)}</strong><div class="meta">下次：${esc(new Date(r.nextTs).toLocaleString())} · 频率：每 ${esc(r.intervalMin)} 分钟 · ${r.enabled ? "启用中" : "已暂停"}</div><div class="tools-mini-actions"><button type="button" class="btn btn-sm" data-toggle-reminder="${esc(r.id)}">${r.enabled ? "暂停" : "启用"}</button><button type="button" class="btn btn-sm" data-delete-reminder="${esc(r.id)}">删除</button></div></div>`).join("")
         : '<div class="tools-mini-item">暂无提醒</div>';
     }
+    function renderToolHistoryVersionSelector(region) {
+      const host = document.getElementById(`${region}HistoryVersion`);
+      if (!host) return;
+      const versions = (state.toolHistorySnapshots || []).filter((s) => s.region === region).slice(0, 12);
+      host.innerHTML = `<option value="latest">最新记录</option>${versions.map((s) => `<option value="${esc(s.id)}">${esc(s.ts)} · ${esc(s.id)}</option>`).join("")}`;
+    }
     function renderToolMetrics(region) {
       const host = document.getElementById(`${region}Metric`);
       if (!host) return;
@@ -914,11 +1071,48 @@
         <div class="tools-metric-item" style="grid-column:1 / -1"><div class="k">最近执行时间</div><div class="v">${esc(lastRun)}</div></div>
       `;
     }
+    function renderToolHeatmap(region) {
+      const host = document.getElementById(`${region}Heatmap`);
+      if (!host) return;
+      const grid = Array.from({ length: 28 }, () => 0);
+      const now = Date.now();
+      (state.toolRuns || [])
+        .filter((r) => r.region === region)
+        .forEach((r) => {
+          const at = Number(r.at) || Date.parse(String(r.ts).replace(" ", "T")) || now;
+          const daysAgo = Math.floor((now - at) / (24 * 60 * 60 * 1000));
+          if (daysAgo >= 0 && daysAgo < 28) grid[27 - daysAgo] += 1;
+        });
+      const max = Math.max(1, ...grid);
+      host.innerHTML = grid.map((v) => {
+        const alpha = v ? Math.min(0.9, 0.18 + (v / max) * 0.72) : 0.08;
+        return `<div class="heat-cell" title="执行 ${v} 次" style="background: rgba(59,130,246,${alpha})"></div>`;
+      }).join("");
+    }
+    function renderToolBoard(region) {
+      const host = document.getElementById(`${region}Board`);
+      if (!host) return;
+      const runs = (state.toolRuns || []).filter((r) => r.region === region);
+      const reminders = (state.toolReminders || []).filter((r) => r.region === region);
+      const dueCnt = reminders.filter((r) => r.enabled && Number(r.nextTs) <= Date.now()).length;
+      const startOfDay = new Date();
+      startOfDay.setHours(0, 0, 0, 0);
+      const todayRuns = runs.filter((r) => (Number(r.at) || Date.parse(String(r.ts).replace(" ", "T")) || 0) >= startOfDay.getTime()).length;
+      const stale = runs[0] ? ((Date.now() - (Number(runs[0].at) || Date.parse(String(runs[0].ts).replace(" ", "T")) || 0)) > 24 * 60 * 60 * 1000 ? 1 : 0) : 1;
+      host.innerHTML = `
+        <div class="board-col"><div class="k">待执行提醒</div><strong>${dueCnt}</strong></div>
+        <div class="board-col"><div class="k">今日执行</div><strong>${todayRuns}</strong></div>
+        <div class="board-col"><div class="k">异常关注</div><strong>${stale}</strong></div>
+      `;
+    }
     function renderAllToolOps() {
       ["us", "ca", "sg"].forEach((region) => {
         renderToolHistory(region);
         renderToolReminders(region);
+        renderToolHistoryVersionSelector(region);
         renderToolMetrics(region);
+        renderToolHeatmap(region);
+        renderToolBoard(region);
       });
     }
     function executeToolAction(region, action, detail, logId) {
@@ -2071,6 +2265,8 @@
           saveState();
           renderToolHistory(region);
           renderToolMetrics(region);
+          renderToolHeatmap(region);
+          renderToolBoard(region);
           addAudit("tools.history.clear", region);
         });
       });
@@ -2082,6 +2278,24 @@
             .map((r) => [r.ts, r.region, r.action, String(r.detail).replace(/\n/g, " / ")]);
           csvDownload(`${region}_tool_history.csv`, ["ts", "region", "action", "detail"], rows.length ? rows : [[nowText(), region, "none", "empty"]]);
           addAudit("tools.history.export", region);
+        });
+      });
+      document.querySelectorAll("[data-download-history-version]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const region = btn.dataset.downloadHistoryVersion;
+          const sel = document.getElementById(`${region}HistoryVersion`);
+          const versionId = sel?.value || "latest";
+          let rows = [];
+          if (versionId === "latest") {
+            rows = (state.toolRuns || [])
+              .filter((r) => r.region === region)
+              .map((r) => [r.ts, r.region, r.action, String(r.detail).replace(/\n/g, " / ")]);
+          } else {
+            const snap = (state.toolHistorySnapshots || []).find((s) => s.id === versionId && s.region === region);
+            rows = (snap?.rows || []).map((r) => [r.ts, region, r.action, String(r.detail).replace(/\n/g, " / ")]);
+          }
+          csvDownload(`${region}_tool_history_${versionId}.csv`, ["ts", "region", "action", "detail"], rows.length ? rows : [[nowText(), region, "none", "empty"]]);
+          addAudit("tools.history.download_version", `${region}:${versionId}`);
         });
       });
       document.querySelectorAll("[data-add-reminder]").forEach((btn) => {
@@ -2105,6 +2319,7 @@
           if (textInput) textInput.value = "";
           renderToolReminders(region);
           renderToolMetrics(region);
+          renderToolBoard(region);
           bindToolReminderActions();
           addAudit("tools.reminder.create", `${region}:${text}`);
         });
