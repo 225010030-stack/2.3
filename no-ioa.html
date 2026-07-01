@@ -208,7 +208,7 @@
     }
     .kgf-kpi-card .v {
       margin-top: 5px;
-      font-size: 36px;
+      font-size: 40px;
       font-weight: 800;
       line-height: 1;
       color: #0f172a;
@@ -221,10 +221,10 @@
     }
     .kgf-source-card {
       border-radius: 10px;
-      padding: 12px;
+      padding: 14px 12px;
       background: #fff;
       border: 1px solid #e2e8f0;
-      min-height: 98px;
+      min-height: 108px;
     }
     .kgf-source-card.bot {
       border-top: 3px solid #818cf8;
@@ -262,8 +262,27 @@
     .kgf-queue-card {
       border: 1px solid #e2e8f0;
       border-radius: 10px;
-      padding: 10px;
+      padding: 12px;
       background: #fff;
+    }
+    #panelKnowledge .sub-tabs {
+      gap: 22px;
+      border-bottom: 1px solid #e2e8f0;
+      margin: 0 0 14px;
+      padding-left: 2px;
+    }
+    #panelKnowledge .sub-tab {
+      border: none;
+      border-radius: 0;
+      background: transparent;
+      color: #64748b;
+      padding: 8px 0;
+      font-weight: 600;
+    }
+    #panelKnowledge .sub-tab.active {
+      color: #2563eb;
+      border-bottom: 2px solid #2563eb;
+      background: transparent;
     }
     .kgf-bar {
       margin-top: 8px;
@@ -495,7 +514,7 @@
     .ops-dashboard-grid {
       margin-top: 10px;
       display: grid;
-      grid-template-columns: 1.2fr 1fr;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 10px;
     }
     .ops-viz-card {
@@ -537,6 +556,38 @@
       font-size: 11px;
       color: #64748b;
       margin-bottom: 3px;
+    }
+    .trend-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      align-items: end;
+      gap: 6px;
+      min-height: 90px;
+    }
+    .trend-col {
+      display: grid;
+      gap: 4px;
+      justify-items: center;
+      font-size: 10px;
+      color: #64748b;
+    }
+    .trend-bar {
+      width: 100%;
+      border-radius: 6px 6px 2px 2px;
+      background: linear-gradient(180deg, #60a5fa 0%, #2563eb 100%);
+      min-height: 6px;
+    }
+    .exception-list {
+      display: grid;
+      gap: 6px;
+    }
+    .exception-item {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      background: #f8fafc;
+      padding: 8px;
+      font-size: 12px;
+      color: #334155;
     }
     .tools-mini-card {
       border: 1px solid #e2e8f0;
@@ -701,8 +752,16 @@
                         <div id="usHeatmap" class="heatmap-grid"></div>
                       </section>
                       <section class="ops-viz-card">
+                        <h4>周趋势</h4>
+                        <div id="usTrend" class="trend-grid"></div>
+                      </section>
+                      <section class="ops-viz-card">
                         <h4>运营看板</h4>
                         <div id="usBoard" class="board-grid"></div>
+                      </section>
+                      <section class="ops-viz-card">
+                        <h4>异常项列表</h4>
+                        <div id="usExceptions" class="exception-list"></div>
                       </section>
                     </div>
                   </div>
@@ -767,8 +826,16 @@
                         <div id="caHeatmap" class="heatmap-grid"></div>
                       </section>
                       <section class="ops-viz-card">
+                        <h4>周趋势</h4>
+                        <div id="caTrend" class="trend-grid"></div>
+                      </section>
+                      <section class="ops-viz-card">
                         <h4>运营看板</h4>
                         <div id="caBoard" class="board-grid"></div>
+                      </section>
+                      <section class="ops-viz-card">
+                        <h4>异常项列表</h4>
+                        <div id="caExceptions" class="exception-list"></div>
                       </section>
                     </div>
                   </div>
@@ -832,8 +899,16 @@
                         <div id="sgHeatmap" class="heatmap-grid"></div>
                       </section>
                       <section class="ops-viz-card">
+                        <h4>周趋势</h4>
+                        <div id="sgTrend" class="trend-grid"></div>
+                      </section>
+                      <section class="ops-viz-card">
                         <h4>运营看板</h4>
                         <div id="sgBoard" class="board-grid"></div>
+                      </section>
+                      <section class="ops-viz-card">
+                        <h4>异常项列表</h4>
+                        <div id="sgExceptions" class="exception-list"></div>
                       </section>
                     </div>
                   </div>
@@ -1105,6 +1180,50 @@
         <div class="board-col"><div class="k">异常关注</div><strong>${stale}</strong></div>
       `;
     }
+    function renderToolTrend(region) {
+      const host = document.getElementById(`${region}Trend`);
+      if (!host) return;
+      const now = Date.now();
+      const oneDay = 24 * 60 * 60 * 1000;
+      const bins = Array.from({ length: 7 }, () => 0);
+      (state.toolRuns || [])
+        .filter((r) => r.region === region)
+        .forEach((r) => {
+          const at = Number(r.at) || Date.parse(String(r.ts).replace(" ", "T")) || now;
+          const daysAgo = Math.floor((now - at) / oneDay);
+          if (daysAgo >= 0 && daysAgo < 7) bins[6 - daysAgo] += 1;
+        });
+      const max = Math.max(1, ...bins);
+      const labels = ["-6d", "-5d", "-4d", "-3d", "-2d", "-1d", "今天"];
+      host.innerHTML = bins.map((v, i) => {
+        const h = Math.max(8, Math.round((v / max) * 64));
+        return `<div class="trend-col"><div class="trend-bar" style="height:${h}px" title="执行 ${v} 次"></div><span>${labels[i]}</span></div>`;
+      }).join("");
+    }
+    function renderToolExceptions(region) {
+      const host = document.getElementById(`${region}Exceptions`);
+      if (!host) return;
+      const runs = (state.toolRuns || []).filter((r) => r.region === region);
+      const reminders = (state.toolReminders || []).filter((r) => r.region === region);
+      const items = [];
+      const latestAt = runs[0] ? (Number(runs[0].at) || Date.parse(String(runs[0].ts).replace(" ", "T")) || 0) : 0;
+      if (!latestAt || Date.now() - latestAt > 24 * 60 * 60 * 1000) {
+        items.push({ key: "stale", text: "24小时内无执行记录", reminder: "补跑一次流程并复核结果" });
+      }
+      const dueCnt = reminders.filter((r) => r.enabled && Number(r.nextTs) <= Date.now()).length;
+      if (dueCnt > 0) {
+        items.push({ key: "due", text: `有 ${dueCnt} 条提醒已到期`, reminder: "处理到期提醒并确认执行" });
+      }
+      const todayStart = new Date();
+      todayStart.setHours(0, 0, 0, 0);
+      const todayRuns = runs.filter((r) => (Number(r.at) || Date.parse(String(r.ts).replace(" ", "T")) || 0) >= todayStart.getTime()).length;
+      if (todayRuns < 1) {
+        items.push({ key: "low", text: "今日执行次数偏低（0）", reminder: "安排今日最少一次执行" });
+      }
+      host.innerHTML = items.length
+        ? items.map((it) => `<div class="exception-item"><div>${esc(it.text)}</div><div class="tools-mini-actions"><button type="button" class="btn btn-sm" data-add-exception-reminder="${region}|${esc(it.reminder)}">转为提醒</button></div></div>`).join("")
+        : '<div class="exception-item">暂无异常项</div>';
+    }
     function renderAllToolOps() {
       ["us", "ca", "sg"].forEach((region) => {
         renderToolHistory(region);
@@ -1113,6 +1232,8 @@
         renderToolMetrics(region);
         renderToolHeatmap(region);
         renderToolBoard(region);
+        renderToolTrend(region);
+        renderToolExceptions(region);
       });
     }
     function executeToolAction(region, action, detail, logId) {
@@ -1471,6 +1592,7 @@
           <div class="panel-head">
             <h3>知识缺口识别与生产 · Knowledge Gap Finder</h3>
           </div>
+          <p class="muted" style="margin:0 0 10px">从“知识缺失导致问题”到“主动补齐知识缺口”。3 类来源识别缺口，AI 制助起草，PM 审核，COE 定稿。</p>
 
           <div class="kgf-kpi-grid">
             <div class="kgf-kpi-card"><div class="k">待补缺口</div><div class="v">${totalCnt}</div><div class="muted">高优 ${highCnt}</div></div>
@@ -1481,9 +1603,9 @@
 
           <p class="section-title">知识缺口的 3 个识别来源</p>
           <div class="kgf-three-grid">
-            <div class="kgf-source-card bot"><strong>Chatbot 未命中</strong></div>
-            <div class="kgf-source-card ex"><strong>Exception Case</strong></div>
-            <div class="kgf-source-card pm"><strong>PM 经验判断</strong></div>
+            <div class="kgf-source-card bot"><strong>Chatbot 未命中</strong><p class="muted" style="margin:8px 0 0">员工提问无法匹配知识，未命中率高即触发补缺。</p></div>
+            <div class="kgf-source-card ex"><strong>Exception Case</strong><p class="muted" style="margin:8px 0 0">同类工单反复出现，说明操作指引不清晰。</p></div>
+            <div class="kgf-source-card pm"><strong>PM 经验判断</strong><p class="muted" style="margin:8px 0 0">新政策刚上线，需要提前建立知识沉淀。</p></div>
           </div>
 
           <div class="kgf-main-grid">
@@ -2322,6 +2444,26 @@
           renderToolBoard(region);
           bindToolReminderActions();
           addAudit("tools.reminder.create", `${region}:${text}`);
+        });
+      });
+      document.querySelectorAll("[data-add-exception-reminder]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const raw = btn.dataset.addExceptionReminder || "";
+          const [region, text] = raw.split("|");
+          if (!region || !text) return;
+          state.toolReminders = Array.isArray(state.toolReminders) ? state.toolReminders : [];
+          state.toolReminders.unshift({
+            id: `TR-${String(Date.now()).slice(-6)}`,
+            region,
+            text,
+            intervalMin: 1440,
+            nextTs: Date.now() + 10 * 60 * 1000,
+            enabled: true
+          });
+          saveState();
+          renderAllToolOps();
+          bindToolReminderActions();
+          addAudit("tools.exception.to_reminder", `${region}:${text}`);
         });
       });
       renderAllToolOps();
