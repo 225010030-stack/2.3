@@ -107,6 +107,25 @@
       color: #334155;
       font-weight: 700;
     }
+    .kb-ops-toolbar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .kb-ops-toolbar input,
+    .kb-ops-toolbar select,
+    .kb-ops-toolbar textarea {
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 7px 10px;
+      font-size: 12px;
+      background: #fff;
+    }
+    .kb-ops-toolbar textarea {
+      min-width: 280px;
+      min-height: 32px;
+    }
     .lite-actions {
       margin-top: 10px;
       display: flex;
@@ -1038,6 +1057,11 @@
         { id: "KG-003", title: "新薪酬结构说明", severity: "medium", owner: "PM", progress: 42 },
         { id: "KG-004", title: "加班费计算口径稽核表", severity: "medium", owner: "Policy", progress: 39 }
       ],
+      knowledgeDocs: [
+        { id: "OPS-01", title: "US 月结分摊 SOP", type: "SOP", status: "已入库", updated: "2026-06-30", content: "US 分摊流程步骤：准备台账、校验字段、执行自动分摊、复核差异。" },
+        { id: "OPS-02", title: "CAN 提单检查清单", type: "Checklist", status: "待复核", updated: "2026-06-28", content: "CAN 提单提交前检查：金额、成本中心、项目编码、审批链路。" },
+        { id: "OPS-03", title: "SG EE Listing 规则", type: "Policy", status: "已更新", updated: "2026-06-29", content: "SG EE Listing 规则：Active/Terminated 合并规则、冲突优先级、输出标签定义。" }
+      ],
       toolRuns: [],
       toolReminders: [
         { id: "TR-001", region: "us", text: "复核 US 分摊差异再提交", intervalMin: 1440, nextTs: Date.now() + 3600 * 1000, enabled: true },
@@ -1583,6 +1607,7 @@
 
     function renderKnowledge() {
       const gaps = state.knowledgeGaps || [];
+      const docs = state.knowledgeDocs || [];
       const highCnt = gaps.filter((g) => g.severity === "high").length;
       const mediumCnt = gaps.filter((g) => g.severity === "medium").length;
       const totalCnt = gaps.length;
@@ -1635,12 +1660,30 @@
         </div>`;
       document.getElementById("kb-ops").innerHTML = `
         <div class="panel">
+          <div class="panel-head"><h3>知识文档 / SOP</h3></div>
+          <div class="kb-ops-toolbar">
+            <input id="newKbDocTitle" placeholder="文档标题，例如：US 月结分摊 SOP" />
+            <select id="newKbDocType"><option>SOP</option><option>Checklist</option><option>Policy</option><option>FAQ</option></select>
+            <select id="newKbDocStatus"><option>已入库</option><option>待复核</option><option>已更新</option></select>
+            <textarea id="newKbDocContent" placeholder="文档正文/摘要（可下载）"></textarea>
+            <button class="btn btn-sm btn-primary" id="btnAddKbDoc">新增文档</button>
+          </div>
           <table class="lite-table">
-            <thead><tr><th>编号</th><th>主题</th><th>状态</th><th>更新</th></tr></thead>
+            <thead><tr><th>编号</th><th>主题</th><th>类型</th><th>状态</th><th>更新</th><th>动作</th></tr></thead>
             <tbody>
-              <tr><td>OPS-01</td><td>US 月结分摊 SOP</td><td>已入库</td><td>2026-06-30</td></tr>
-              <tr><td>OPS-02</td><td>CAN 提单检查清单</td><td>待复核</td><td>2026-06-28</td></tr>
-              <tr><td>OPS-03</td><td>SG EE Listing 规则</td><td>已更新</td><td>2026-06-29</td></tr>
+              ${docs.map((d) => `
+                <tr>
+                  <td>${esc(d.id)}</td>
+                  <td>${esc(d.title)}</td>
+                  <td>${esc(d.type || "SOP")}</td>
+                  <td>${esc(d.status || "已入库")}</td>
+                  <td>${esc(d.updated || "-")}</td>
+                  <td>
+                    <button class="btn btn-sm" data-kb-doc-download="${esc(d.id)}">下载</button>
+                    <button class="btn btn-sm" data-kb-doc-delete="${esc(d.id)}">删除</button>
+                  </td>
+                </tr>
+              `).join("") || '<tr><td colspan="6">暂无文档</td></tr>'}
             </tbody>
           </table>
         </div>`;
@@ -1685,6 +1728,51 @@
           addAudit("bot.ask", input.value.trim() || "(empty)");
         };
       }
+      const btnAddKbDoc = document.getElementById("btnAddKbDoc");
+      if (btnAddKbDoc) {
+        btnAddKbDoc.onclick = () => {
+          const title = document.getElementById("newKbDocTitle")?.value?.trim();
+          if (!title) return;
+          const type = document.getElementById("newKbDocType")?.value || "SOP";
+          const status = document.getElementById("newKbDocStatus")?.value || "已入库";
+          const content = document.getElementById("newKbDocContent")?.value?.trim() || `${title}\n\n待补充正文`;
+          state.knowledgeDocs = Array.isArray(state.knowledgeDocs) ? state.knowledgeDocs : [];
+          state.knowledgeDocs.unshift({
+            id: `OPS-${String(Date.now()).slice(-4)}`,
+            title,
+            type,
+            status,
+            updated: nowText().slice(0, 10),
+            content
+          });
+          addAudit("kb.doc.create", title);
+          saveState();
+          renderKnowledge();
+        };
+      }
+      document.querySelectorAll("[data-kb-doc-download]").forEach((btn) => {
+        btn.onclick = () => {
+          const doc = (state.knowledgeDocs || []).find((d) => d.id === btn.dataset.kbDocDownload);
+          if (!doc) return;
+          const text = `${doc.title}\n\n类型: ${doc.type}\n状态: ${doc.status}\n更新: ${doc.updated}\n\n${doc.content || ""}`;
+          const blob = new Blob([text], { type: "text/plain;charset=utf-8;" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `${doc.id}_${doc.title}.txt`;
+          a.click();
+          URL.revokeObjectURL(url);
+          addAudit("kb.doc.download", doc.id);
+        };
+      });
+      document.querySelectorAll("[data-kb-doc-delete]").forEach((btn) => {
+        btn.onclick = () => {
+          state.knowledgeDocs = (state.knowledgeDocs || []).filter((d) => d.id !== btn.dataset.kbDocDelete);
+          addAudit("kb.doc.delete", btn.dataset.kbDocDelete);
+          saveState();
+          renderKnowledge();
+        };
+      });
     }
 
     function renderCollab() {
