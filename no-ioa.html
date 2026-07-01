@@ -427,9 +427,57 @@
     }
     .tools-ops-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 10px;
       margin-top: 10px;
+    }
+    .rt-step-title {
+      margin: 10px 0 8px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #1e293b;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .rt-step-title::before {
+      content: "";
+      width: 4px;
+      height: 14px;
+      border-radius: 999px;
+      background: #3b82f6;
+      display: inline-block;
+    }
+    .tools-region-banner {
+      border-radius: 12px;
+      border: 1px solid #dbeafe;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      padding: 10px 12px;
+      margin-bottom: 8px;
+    }
+    .tools-region-banner h3 {
+      margin: 0;
+      font-size: 15px;
+      color: #0f172a;
+    }
+    .tools-metric {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .tools-metric-item {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      background: #f8fafc;
+      padding: 8px;
+      font-size: 12px;
+      color: #334155;
+    }
+    .tools-metric-item .k {
+      color: #64748b;
+      font-size: 11px;
+      margin-bottom: 2px;
     }
     .tools-mini-card {
       border: 1px solid #e2e8f0;
@@ -536,24 +584,27 @@
               <div id="usView" class="lite-view active">
                 <div class="tools-region-banner americas"><h3>美国工作区 · 分摊 / 提单</h3></div>
                 <div class="panel allocation-ops-panel">
+                  <h4 class="rt-step-title">步骤一 · 执行动作</h4>
                   <div class="rt-auto-bar"><span class="rt-auto-label">自动化</span><button type="button" class="btn btn-primary" id="usBtnAlloc">⚡ 动作1 · 批量自动分摊</button><button type="button" class="btn" id="usBtnSubmit">📋 动作2 · 生成提单文本</button></div>
                   <div class="rt-workspace">
+                    <h4 class="rt-step-title">步骤二 · 上传输入文件</h4>
                     <div class="rt-form-grid">
                       <label class="rt-field">账单月 YYYYMM<input type="text" id="usPeriod" maxlength="6" placeholder="202607" /></label>
                       <label class="rt-field rt-span2">台账 CSV<input type="file" id="usLedger" accept=".csv,text/csv" /></label>
                       <label class="rt-field rt-span2">P1 人数 CSV<input type="file" id="usP1" accept=".csv,text/csv" /></label>
                       <label class="rt-field rt-span2">提单 CSV<input type="file" id="usSubmission" accept=".csv,text/csv" /></label>
                     </div>
+                    <h4 class="rt-step-title">步骤三 · 结果输出</h4>
                     <div class="lite-actions"><button type="button" class="btn btn-sm" id="usDownloadSample">下载示例结果 CSV</button></div>
                     <div class="lite-log" id="usLog">等待执行…</div>
                     <div class="tools-ops-grid">
                       <section class="tools-mini-card">
-                        <h4>执行历史</h4>
+                        <h4>步骤四 · 执行历史</h4>
                         <div id="usHistoryList" class="tools-mini-list"></div>
-                        <div class="tools-mini-actions"><button type="button" class="btn btn-sm" data-clear-history="us">清空历史</button></div>
+                        <div class="tools-mini-actions"><button type="button" class="btn btn-sm" data-export-history="us">导出历史</button><button type="button" class="btn btn-sm" data-clear-history="us">清空历史</button></div>
                       </section>
                       <section class="tools-mini-card">
-                        <h4>定期提醒</h4>
+                        <h4>步骤五 · 定期提醒</h4>
                         <div class="lite-form-row" style="margin-top:0">
                           <input id="usReminderText" placeholder="例如：周会前复核 US 分摊" />
                           <select id="usReminderInterval">
@@ -565,6 +616,10 @@
                         </div>
                         <div id="usReminderList" class="tools-mini-list"></div>
                       </section>
+                      <section class="tools-mini-card">
+                        <h4>步骤六 · 执行统计</h4>
+                        <div id="usMetric" class="tools-metric"></div>
+                      </section>
                     </div>
                   </div>
                 </div>
@@ -573,24 +628,27 @@
               <div id="caView" class="lite-view">
                 <div class="tools-region-banner americas"><h3>加拿大工作区 · 分摊 / 提单</h3></div>
                 <div class="panel allocation-ops-panel">
+                  <h4 class="rt-step-title">步骤一 · 执行动作</h4>
                   <div class="rt-auto-bar"><span class="rt-auto-label">自动化</span><button type="button" class="btn btn-primary" id="caBtnAlloc">⚡ 动作1 · 批量自动分摊</button><button type="button" class="btn" id="caBtnSubmit">📋 动作2 · 生成提单文本</button></div>
                   <div class="rt-workspace">
+                    <h4 class="rt-step-title">步骤二 · 上传输入文件</h4>
                     <div class="rt-form-grid">
                       <label class="rt-field">账单月 YYYYMM<input type="text" id="caPeriod" maxlength="6" placeholder="202607" /></label>
                       <label class="rt-field rt-span2">台账 CSV<input type="file" id="caLedger" accept=".csv,text/csv" /></label>
                       <label class="rt-field rt-span2">P1 人数 CSV<input type="file" id="caP1" accept=".csv,text/csv" /></label>
                       <label class="rt-field rt-span2">提单 CSV<input type="file" id="caSubmission" accept=".csv,text/csv" /></label>
                     </div>
+                    <h4 class="rt-step-title">步骤三 · 结果输出</h4>
                     <div class="lite-actions"><button type="button" class="btn btn-sm" id="caDownloadSample">下载示例结果 CSV</button></div>
                     <div class="lite-log" id="caLog">等待执行…</div>
                     <div class="tools-ops-grid">
                       <section class="tools-mini-card">
-                        <h4>执行历史</h4>
+                        <h4>步骤四 · 执行历史</h4>
                         <div id="caHistoryList" class="tools-mini-list"></div>
-                        <div class="tools-mini-actions"><button type="button" class="btn btn-sm" data-clear-history="ca">清空历史</button></div>
+                        <div class="tools-mini-actions"><button type="button" class="btn btn-sm" data-export-history="ca">导出历史</button><button type="button" class="btn btn-sm" data-clear-history="ca">清空历史</button></div>
                       </section>
                       <section class="tools-mini-card">
-                        <h4>定期提醒</h4>
+                        <h4>步骤五 · 定期提醒</h4>
                         <div class="lite-form-row" style="margin-top:0">
                           <input id="caReminderText" placeholder="例如：提交前校验 CAN 字段映射" />
                           <select id="caReminderInterval">
@@ -602,6 +660,10 @@
                         </div>
                         <div id="caReminderList" class="tools-mini-list"></div>
                       </section>
+                      <section class="tools-mini-card">
+                        <h4>步骤六 · 执行统计</h4>
+                        <div id="caMetric" class="tools-metric"></div>
+                      </section>
                     </div>
                   </div>
                 </div>
@@ -610,23 +672,26 @@
               <div id="sgView" class="lite-view">
                 <div class="tools-region-banner non-americas"><h3>新加坡工作区 · EE Listing</h3></div>
                 <div class="panel allocation-ops-panel">
+                  <h4 class="rt-step-title">步骤一 · 执行动作</h4>
                   <div class="rt-auto-bar"><span class="rt-auto-label">自动化</span><button type="button" class="btn btn-primary" id="sgBtnRun">⚡ 一键生成 EE Listing 摘要</button></div>
                   <div class="rt-workspace">
+                    <h4 class="rt-step-title">步骤二 · 上传输入文件</h4>
                     <div class="rt-form-grid">
                       <label class="rt-field rt-span2">① Active Employee Report<input type="file" id="sgActive" accept=".xlsx" /></label>
                       <label class="rt-field rt-span2">② Terminated Report<input type="file" id="sgTerminated" accept=".xlsx" /></label>
                       <label class="rt-field rt-span2">③ 上月 EE Listing<input type="file" id="sgLastEe" accept=".xlsx" /></label>
                     </div>
+                    <h4 class="rt-step-title">步骤三 · 结果输出</h4>
                     <div class="lite-actions"><button type="button" class="btn btn-sm" id="sgDownloadTemplate">下载提交模板说明</button></div>
                     <div class="lite-log" id="sgLog">等待执行…</div>
                     <div class="tools-ops-grid">
                       <section class="tools-mini-card">
-                        <h4>执行历史</h4>
+                        <h4>步骤四 · 执行历史</h4>
                         <div id="sgHistoryList" class="tools-mini-list"></div>
-                        <div class="tools-mini-actions"><button type="button" class="btn btn-sm" data-clear-history="sg">清空历史</button></div>
+                        <div class="tools-mini-actions"><button type="button" class="btn btn-sm" data-export-history="sg">导出历史</button><button type="button" class="btn btn-sm" data-clear-history="sg">清空历史</button></div>
                       </section>
                       <section class="tools-mini-card">
-                        <h4>定期提醒</h4>
+                        <h4>步骤五 · 定期提醒</h4>
                         <div class="lite-form-row" style="margin-top:0">
                           <input id="sgReminderText" placeholder="例如：每日报送前核对离职名单" />
                           <select id="sgReminderInterval">
@@ -637,6 +702,10 @@
                           <button type="button" class="btn btn-sm" data-add-reminder="sg">新增</button>
                         </div>
                         <div id="sgReminderList" class="tools-mini-list"></div>
+                      </section>
+                      <section class="tools-mini-card">
+                        <h4>步骤六 · 执行统计</h4>
+                        <div id="sgMetric" class="tools-metric"></div>
                       </section>
                     </div>
                   </div>
@@ -832,10 +901,24 @@
         ? list.map((r) => `<div class="tools-mini-item"><strong>${esc(r.text)}</strong><div class="meta">下次：${esc(new Date(r.nextTs).toLocaleString())} · 频率：每 ${esc(r.intervalMin)} 分钟 · ${r.enabled ? "启用中" : "已暂停"}</div><div class="tools-mini-actions"><button type="button" class="btn btn-sm" data-toggle-reminder="${esc(r.id)}">${r.enabled ? "暂停" : "启用"}</button><button type="button" class="btn btn-sm" data-delete-reminder="${esc(r.id)}">删除</button></div></div>`).join("")
         : '<div class="tools-mini-item">暂无提醒</div>';
     }
+    function renderToolMetrics(region) {
+      const host = document.getElementById(`${region}Metric`);
+      if (!host) return;
+      const runs = (state.toolRuns || []).filter((r) => r.region === region);
+      const reminders = (state.toolReminders || []).filter((r) => r.region === region);
+      const enabledCnt = reminders.filter((r) => r.enabled).length;
+      const lastRun = runs[0]?.ts || "-";
+      host.innerHTML = `
+        <div class="tools-metric-item"><div class="k">累计执行</div><div class="v">${runs.length}</div></div>
+        <div class="tools-metric-item"><div class="k">启用提醒</div><div class="v">${enabledCnt}</div></div>
+        <div class="tools-metric-item" style="grid-column:1 / -1"><div class="k">最近执行时间</div><div class="v">${esc(lastRun)}</div></div>
+      `;
+    }
     function renderAllToolOps() {
       ["us", "ca", "sg"].forEach((region) => {
         renderToolHistory(region);
         renderToolReminders(region);
+        renderToolMetrics(region);
       });
     }
     function executeToolAction(region, action, detail, logId) {
@@ -844,6 +927,7 @@
       addToolRun(region, action, detail);
       addAudit("tools.run", `${region}:${action}`);
       renderToolHistory(region);
+      renderToolMetrics(region);
     }
     function bindToolReminderActions() {
       document.querySelectorAll("[data-toggle-reminder]").forEach((btn) => {
@@ -881,6 +965,7 @@
       saveState();
       const newest = due[0];
       pushReminderNotice(`提醒：${newest.region.toUpperCase()} · ${newest.text}（共 ${due.length} 条到期）`);
+      addToolRun(newest.region, "reminder_due", `提醒到期：${newest.text}`);
       renderAllToolOps();
     }
 
@@ -1948,6 +2033,7 @@
         csvDownload("US_allocation_sample.csv", ["vendor", "period", "amount_usd", "cost_center", "status"], [["Vendor_A", "202607", "12400.00", "CC-1001", "ready"], ["Vendor_B", "202607", "8600.00", "CC-1002", "ready"]]);
         addToolRun("us", "download_sample", "下载 US 示例结果 CSV");
         renderToolHistory("us");
+        renderToolMetrics("us");
       });
       document.getElementById("caBtnAlloc").addEventListener("click", () => {
         const period = document.getElementById("caPeriod").value || "未填写";
@@ -1960,6 +2046,7 @@
         csvDownload("CAN_allocation_sample.csv", ["vendor", "period", "amount_cad", "cost_center", "status"], [["Vendor_CA_1", "202607", "5300.00", "CA-CC-01", "ready"], ["Vendor_CA_2", "202607", "4875.00", "CA-CC-07", "ready"]]);
         addToolRun("ca", "download_sample", "下载 CAN 示例结果 CSV");
         renderToolHistory("ca");
+        renderToolMetrics("ca");
       });
       document.getElementById("sgBtnRun").addEventListener("click", () => {
         executeToolAction("sg", "ee_listing_summary", `SG EE Listing 摘要示例执行\nActive: ${fileName("sgActive")}\nTerminated: ${fileName("sgTerminated")}\n上月EE: ${fileName("sgLastEe")}`, "sgLog");
@@ -1975,6 +2062,7 @@
         URL.revokeObjectURL(url);
         addToolRun("sg", "download_template", "下载 SG 提交模板说明");
         renderToolHistory("sg");
+        renderToolMetrics("sg");
       });
       document.querySelectorAll("[data-clear-history]").forEach((btn) => {
         btn.addEventListener("click", () => {
@@ -1982,7 +2070,18 @@
           state.toolRuns = (state.toolRuns || []).filter((r) => r.region !== region);
           saveState();
           renderToolHistory(region);
+          renderToolMetrics(region);
           addAudit("tools.history.clear", region);
+        });
+      });
+      document.querySelectorAll("[data-export-history]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const region = btn.dataset.exportHistory;
+          const rows = (state.toolRuns || [])
+            .filter((r) => r.region === region)
+            .map((r) => [r.ts, r.region, r.action, String(r.detail).replace(/\n/g, " / ")]);
+          csvDownload(`${region}_tool_history.csv`, ["ts", "region", "action", "detail"], rows.length ? rows : [[nowText(), region, "none", "empty"]]);
+          addAudit("tools.history.export", region);
         });
       });
       document.querySelectorAll("[data-add-reminder]").forEach((btn) => {
@@ -2005,6 +2104,7 @@
           saveState();
           if (textInput) textInput.value = "";
           renderToolReminders(region);
+          renderToolMetrics(region);
           bindToolReminderActions();
           addAudit("tools.reminder.create", `${region}:${text}`);
         });
