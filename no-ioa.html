@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SSC 工作台 · 无 IOA 高仿版</title>
+  <title>SSC 工作台 · 无 IOA 共享版</title>
   <link rel="stylesheet" href="tokens.css?v=8a0f394" />
   <link rel="stylesheet" href="console-shell.css?v=8a0f394" />
   <link rel="stylesheet" href="app.css?v=8a0f394" />
@@ -447,6 +447,64 @@
       color: #334155;
       word-break: break-all;
     }
+    .tools-notice {
+      margin-top: 8px;
+      margin-bottom: 10px;
+      padding: 10px 12px;
+      border: 1px solid #fde68a;
+      background: #fffbeb;
+      border-radius: 10px;
+      color: #92400e;
+      font-size: 12px;
+      min-height: 18px;
+    }
+    .tools-ops-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .tools-mini-card {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      background: #fff;
+      padding: 10px;
+    }
+    .tools-mini-card h4 {
+      margin: 0 0 8px;
+      font-size: 13px;
+      color: #0f172a;
+    }
+    .tools-mini-list {
+      max-height: 170px;
+      overflow: auto;
+      display: grid;
+      gap: 6px;
+    }
+    .tools-mini-item {
+      border: 1px solid #eef2f7;
+      border-radius: 8px;
+      padding: 7px 8px;
+      font-size: 12px;
+      background: #f8fafc;
+      color: #334155;
+    }
+    .tools-mini-item .meta {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 2px;
+    }
+    .tools-mini-actions {
+      margin-top: 8px;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    @media (max-width: 980px) {
+      .tools-ops-grid {
+        grid-template-columns: 1fr;
+      }
+    }
     @media (max-width: 980px) {
       .console-main-inner {
         padding-top: 8px;
@@ -504,9 +562,10 @@
             <nav class="sub-rail console-tabs" id="globalSubRail"></nav>
 
             <div class="lite-warning">
-              这是“高仿可操作克隆页”：保留五大板块与二级页签交互，所有数据存储在浏览器本地。<br />
+              这是“可共享前端工作台”：保留五大板块与二级页签交互，所有数据存储在浏览器本地。<br />
               不接入 iOA、无任何鉴权依赖；关闭浏览器后数据仍会保留（localStorage）。
             </div>
+            <div class="tools-notice" id="toolsReminderNotice">提醒中心：暂无到期提醒</div>
 
             <section id="panelTools" class="panel-section active">
               <div class="tools-switch-tabs">
@@ -528,6 +587,26 @@
                     </div>
                     <div class="lite-actions"><button type="button" class="btn btn-sm" id="usDownloadSample">下载示例结果 CSV</button></div>
                     <div class="lite-log" id="usLog">等待执行…</div>
+                    <div class="tools-ops-grid">
+                      <section class="tools-mini-card">
+                        <h4>执行历史</h4>
+                        <div id="usHistoryList" class="tools-mini-list"></div>
+                        <div class="tools-mini-actions"><button type="button" class="btn btn-sm" data-clear-history="us">清空历史</button></div>
+                      </section>
+                      <section class="tools-mini-card">
+                        <h4>定期提醒</h4>
+                        <div class="lite-form-row" style="margin-top:0">
+                          <input id="usReminderText" placeholder="例如：周会前复核 US 分摊" />
+                          <select id="usReminderInterval">
+                            <option value="30">每 30 分钟</option>
+                            <option value="60">每 1 小时</option>
+                            <option value="1440">每天</option>
+                          </select>
+                          <button type="button" class="btn btn-sm" data-add-reminder="us">新增</button>
+                        </div>
+                        <div id="usReminderList" class="tools-mini-list"></div>
+                      </section>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -545,6 +624,26 @@
                     </div>
                     <div class="lite-actions"><button type="button" class="btn btn-sm" id="caDownloadSample">下载示例结果 CSV</button></div>
                     <div class="lite-log" id="caLog">等待执行…</div>
+                    <div class="tools-ops-grid">
+                      <section class="tools-mini-card">
+                        <h4>执行历史</h4>
+                        <div id="caHistoryList" class="tools-mini-list"></div>
+                        <div class="tools-mini-actions"><button type="button" class="btn btn-sm" data-clear-history="ca">清空历史</button></div>
+                      </section>
+                      <section class="tools-mini-card">
+                        <h4>定期提醒</h4>
+                        <div class="lite-form-row" style="margin-top:0">
+                          <input id="caReminderText" placeholder="例如：提交前校验 CAN 字段映射" />
+                          <select id="caReminderInterval">
+                            <option value="30">每 30 分钟</option>
+                            <option value="60">每 1 小时</option>
+                            <option value="1440">每天</option>
+                          </select>
+                          <button type="button" class="btn btn-sm" data-add-reminder="ca">新增</button>
+                        </div>
+                        <div id="caReminderList" class="tools-mini-list"></div>
+                      </section>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -561,6 +660,26 @@
                     </div>
                     <div class="lite-actions"><button type="button" class="btn btn-sm" id="sgDownloadTemplate">下载提交模板说明</button></div>
                     <div class="lite-log" id="sgLog">等待执行…</div>
+                    <div class="tools-ops-grid">
+                      <section class="tools-mini-card">
+                        <h4>执行历史</h4>
+                        <div id="sgHistoryList" class="tools-mini-list"></div>
+                        <div class="tools-mini-actions"><button type="button" class="btn btn-sm" data-clear-history="sg">清空历史</button></div>
+                      </section>
+                      <section class="tools-mini-card">
+                        <h4>定期提醒</h4>
+                        <div class="lite-form-row" style="margin-top:0">
+                          <input id="sgReminderText" placeholder="例如：每日报送前核对离职名单" />
+                          <select id="sgReminderInterval">
+                            <option value="30">每 30 分钟</option>
+                            <option value="60">每 1 小时</option>
+                            <option value="1440">每天</option>
+                          </select>
+                          <button type="button" class="btn btn-sm" data-add-reminder="sg">新增</button>
+                        </div>
+                        <div id="sgReminderList" class="tools-mini-list"></div>
+                      </section>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -688,6 +807,11 @@
         { id: "KG-003", title: "新薪酬结构说明", severity: "medium", owner: "PM", progress: 42 },
         { id: "KG-004", title: "加班费计算口径稽核表", severity: "medium", owner: "Policy", progress: 39 }
       ],
+      toolRuns: [],
+      toolReminders: [
+        { id: "TR-001", region: "us", text: "复核 US 分摊差异再提交", intervalMin: 1440, nextTs: Date.now() + 3600 * 1000, enabled: true },
+        { id: "TR-002", region: "ca", text: "检查 CAN 成本中心映射", intervalMin: 1440, nextTs: Date.now() + 2 * 3600 * 1000, enabled: true }
+      ],
       audit: []
     };
 
@@ -720,6 +844,85 @@
       state.audit.unshift({ ts: nowText(), action, detail });
       state.audit = state.audit.slice(0, 60);
       saveState();
+    }
+    function addToolRun(region, action, detail) {
+      state.toolRuns = Array.isArray(state.toolRuns) ? state.toolRuns : [];
+      state.toolRuns.unshift({
+        id: `RUN-${String(Date.now()).slice(-6)}`,
+        ts: nowText(),
+        region,
+        action,
+        detail
+      });
+      state.toolRuns = state.toolRuns.slice(0, 120);
+      saveState();
+    }
+    function renderToolHistory(region) {
+      const host = document.getElementById(`${region}HistoryList`);
+      if (!host) return;
+      const list = (state.toolRuns || []).filter((r) => r.region === region).slice(0, 12);
+      host.innerHTML = list.length
+        ? list.map((r) => `<div class="tools-mini-item"><strong>${esc(r.action)}</strong><div class="meta">${esc(r.ts)} · ${esc(r.detail)}</div></div>`).join("")
+        : '<div class="tools-mini-item">暂无执行历史</div>';
+    }
+    function renderToolReminders(region) {
+      const host = document.getElementById(`${region}ReminderList`);
+      if (!host) return;
+      const list = (state.toolReminders || []).filter((r) => r.region === region).slice(0, 12);
+      host.innerHTML = list.length
+        ? list.map((r) => `<div class="tools-mini-item"><strong>${esc(r.text)}</strong><div class="meta">下次：${esc(new Date(r.nextTs).toLocaleString())} · 频率：每 ${esc(r.intervalMin)} 分钟 · ${r.enabled ? "启用中" : "已暂停"}</div><div class="tools-mini-actions"><button type="button" class="btn btn-sm" data-toggle-reminder="${esc(r.id)}">${r.enabled ? "暂停" : "启用"}</button><button type="button" class="btn btn-sm" data-delete-reminder="${esc(r.id)}">删除</button></div></div>`).join("")
+        : '<div class="tools-mini-item">暂无提醒</div>';
+    }
+    function renderAllToolOps() {
+      ["us", "ca", "sg"].forEach((region) => {
+        renderToolHistory(region);
+        renderToolReminders(region);
+      });
+    }
+    function executeToolAction(region, action, detail, logId) {
+      const host = document.getElementById(logId);
+      if (host) host.textContent = `[${nowText()}] ${detail}`;
+      addToolRun(region, action, detail);
+      addAudit("tools.run", `${region}:${action}`);
+      renderToolHistory(region);
+    }
+    function bindToolReminderActions() {
+      document.querySelectorAll("[data-toggle-reminder]").forEach((btn) => {
+        btn.onclick = () => {
+          const item = (state.toolReminders || []).find((r) => r.id === btn.dataset.toggleReminder);
+          if (!item) return;
+          item.enabled = !item.enabled;
+          if (item.enabled && item.nextTs < Date.now()) item.nextTs = Date.now() + item.intervalMin * 60 * 1000;
+          saveState();
+          renderAllToolOps();
+        };
+      });
+      document.querySelectorAll("[data-delete-reminder]").forEach((btn) => {
+        btn.onclick = () => {
+          state.toolReminders = (state.toolReminders || []).filter((r) => r.id !== btn.dataset.deleteReminder);
+          saveState();
+          renderAllToolOps();
+        };
+      });
+    }
+    function pushReminderNotice(text) {
+      const host = document.getElementById("toolsReminderNotice");
+      if (!host) return;
+      host.textContent = text;
+    }
+    function processDueReminders() {
+      const now = Date.now();
+      const due = (state.toolReminders || []).filter((r) => r.enabled && Number(r.nextTs) <= now);
+      if (!due.length) return;
+      due.forEach((r) => {
+        const intervalMs = Math.max(5, Number(r.intervalMin) || 30) * 60 * 1000;
+        while (r.nextTs <= now) r.nextTs += intervalMs;
+        addAudit("tools.reminder_due", `${r.region}:${r.text}`);
+      });
+      saveState();
+      const newest = due[0];
+      pushReminderNotice(`提醒：${newest.region.toUpperCase()} · ${newest.text}（共 ${due.length} 条到期）`);
+      renderAllToolOps();
     }
 
     function fileName(id) {
@@ -1666,7 +1869,7 @@
       document.getElementById("sys-audit").innerHTML = `
         <div class="panel">
           <div class="panel-head"><h3>操作日志</h3></div>
-          <table class="admin-audit-table"><thead><tr><th>时间</th><th>动作</th><th>详情</th></tr></thead><tbody>${(state.audit.length ? state.audit : [{ ts: nowText(), action: "system.init", detail: "初始化无 IOA 克隆页" }]).map((a) => `<tr><td>${esc(a.ts)}</td><td>${esc(a.action)}</td><td>${esc(a.detail)}</td></tr>`).join("")}</tbody></table>
+          <table class="admin-audit-table"><thead><tr><th>时间</th><th>动作</th><th>详情</th></tr></thead><tbody>${(state.audit.length ? state.audit : [{ ts: nowText(), action: "system.init", detail: "初始化无 IOA 共享页" }]).map((a) => `<tr><td>${esc(a.ts)}</td><td>${esc(a.action)}</td><td>${esc(a.detail)}</td></tr>`).join("")}</tbody></table>
         </div>`;
 
       document.getElementById("sys-access").innerHTML = `
@@ -1783,26 +1986,30 @@
 
       document.getElementById("usBtnAlloc").addEventListener("click", () => {
         const period = document.getElementById("usPeriod").value || "未填写";
-        document.getElementById("usLog").textContent = `[${nowText()}] US 自动分摊示例执行\n账单月: ${period}\n台账: ${fileName("usLedger")}\nP1人数: ${fileName("usP1")}`;
+        executeToolAction("us", "auto_allocation", `US 自动分摊示例执行\n账单月: ${period}\n台账: ${fileName("usLedger")}\nP1人数: ${fileName("usP1")}`, "usLog");
       });
       document.getElementById("usBtnSubmit").addEventListener("click", () => {
-        document.getElementById("usLog").textContent = `[${nowText()}] US 提单文本示例执行\n提单文件: ${fileName("usSubmission")}`;
+        executeToolAction("us", "submission_text", `US 提单文本示例执行\n提单文件: ${fileName("usSubmission")}`, "usLog");
       });
       document.getElementById("usDownloadSample").addEventListener("click", () => {
         csvDownload("US_allocation_sample.csv", ["vendor", "period", "amount_usd", "cost_center", "status"], [["Vendor_A", "202607", "12400.00", "CC-1001", "ready"], ["Vendor_B", "202607", "8600.00", "CC-1002", "ready"]]);
+        addToolRun("us", "download_sample", "下载 US 示例结果 CSV");
+        renderToolHistory("us");
       });
       document.getElementById("caBtnAlloc").addEventListener("click", () => {
         const period = document.getElementById("caPeriod").value || "未填写";
-        document.getElementById("caLog").textContent = `[${nowText()}] CAN 自动分摊示例执行\n账单月: ${period}\n台账: ${fileName("caLedger")}\nP1人数: ${fileName("caP1")}`;
+        executeToolAction("ca", "auto_allocation", `CAN 自动分摊示例执行\n账单月: ${period}\n台账: ${fileName("caLedger")}\nP1人数: ${fileName("caP1")}`, "caLog");
       });
       document.getElementById("caBtnSubmit").addEventListener("click", () => {
-        document.getElementById("caLog").textContent = `[${nowText()}] CAN 提单文本示例执行\n提单文件: ${fileName("caSubmission")}`;
+        executeToolAction("ca", "submission_text", `CAN 提单文本示例执行\n提单文件: ${fileName("caSubmission")}`, "caLog");
       });
       document.getElementById("caDownloadSample").addEventListener("click", () => {
         csvDownload("CAN_allocation_sample.csv", ["vendor", "period", "amount_cad", "cost_center", "status"], [["Vendor_CA_1", "202607", "5300.00", "CA-CC-01", "ready"], ["Vendor_CA_2", "202607", "4875.00", "CA-CC-07", "ready"]]);
+        addToolRun("ca", "download_sample", "下载 CAN 示例结果 CSV");
+        renderToolHistory("ca");
       });
       document.getElementById("sgBtnRun").addEventListener("click", () => {
-        document.getElementById("sgLog").textContent = `[${nowText()}] SG EE Listing 摘要示例执行\nActive: ${fileName("sgActive")}\nTerminated: ${fileName("sgTerminated")}\n上月EE: ${fileName("sgLastEe")}`;
+        executeToolAction("sg", "ee_listing_summary", `SG EE Listing 摘要示例执行\nActive: ${fileName("sgActive")}\nTerminated: ${fileName("sgTerminated")}\n上月EE: ${fileName("sgLastEe")}`, "sgLog");
       });
       document.getElementById("sgDownloadTemplate").addEventListener("click", () => {
         const text = "SG EE Listing 模板说明\n1) 上传 Active/Terminated/Last Month\n2) 字段建议: employee_id, legal_name, cost_center\n3) 输出标签: 新增/离职/冲突/缺失";
@@ -1813,7 +2020,46 @@
         a.download = "SG_eelisting_template_note.txt";
         a.click();
         URL.revokeObjectURL(url);
+        addToolRun("sg", "download_template", "下载 SG 提交模板说明");
+        renderToolHistory("sg");
       });
+      document.querySelectorAll("[data-clear-history]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const region = btn.dataset.clearHistory;
+          state.toolRuns = (state.toolRuns || []).filter((r) => r.region !== region);
+          saveState();
+          renderToolHistory(region);
+          addAudit("tools.history.clear", region);
+        });
+      });
+      document.querySelectorAll("[data-add-reminder]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const region = btn.dataset.addReminder;
+          const textInput = document.getElementById(`${region}ReminderText`);
+          const intervalInput = document.getElementById(`${region}ReminderInterval`);
+          const text = textInput?.value?.trim();
+          const intervalMin = Number(intervalInput?.value || 30);
+          if (!text) return;
+          state.toolReminders = Array.isArray(state.toolReminders) ? state.toolReminders : [];
+          state.toolReminders.unshift({
+            id: `TR-${String(Date.now()).slice(-6)}`,
+            region,
+            text,
+            intervalMin,
+            nextTs: Date.now() + intervalMin * 60 * 1000,
+            enabled: true
+          });
+          saveState();
+          if (textInput) textInput.value = "";
+          renderToolReminders(region);
+          bindToolReminderActions();
+          addAudit("tools.reminder.create", `${region}:${text}`);
+        });
+      });
+      renderAllToolOps();
+      bindToolReminderActions();
+      processDueReminders();
+      setInterval(processDueReminders, 60000);
     }
 
     const topbarDate = document.getElementById("topbarDate");
