@@ -211,26 +211,47 @@
     .kgf-kpi-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-      gap: 12px;
-      margin: 10px 0 14px;
+      gap: 14px;
+      margin: 12px 0 14px;
     }
     .kgf-kpi-card {
       background: #fff;
       border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 12px 14px;
-      box-shadow: 0 1px 6px rgba(15, 23, 42, 0.04);
+      border-radius: 14px;
+      padding: 14px 16px;
+      min-height: 112px;
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
     }
     .kgf-kpi-card .k {
-      font-size: 12px;
+      font-size: 11px;
+      line-height: 1.4;
       color: #64748b;
     }
     .kgf-kpi-card .v {
-      margin-top: 5px;
+      margin-top: 8px;
       font-size: 40px;
       font-weight: 800;
-      line-height: 1;
+      line-height: 1.05;
       color: #0f172a;
+    }
+    .kgf-kpi-card .muted {
+      margin-top: 8px;
+      font-size: 11px;
+      line-height: 1.35;
+    }
+    .kgf-title {
+      font-size: 34px;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      margin: 0;
+      color: #0f172a;
+    }
+    .kgf-subline {
+      margin: 8px 0 0;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #64748b;
     }
     .kgf-three-grid {
       display: grid;
@@ -351,7 +372,7 @@
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
-      padding: 2px 0 8px;
+      padding: 0 0 8px;
       margin-top: 0;
       border-top: 0;
       border-bottom: 1px solid #e2e8f0;
@@ -363,8 +384,12 @@
       padding-top: 14px;
     }
     .console-page-head {
-      margin-bottom: 2px;
+      margin-bottom: 0;
       align-items: flex-end;
+    }
+    .console-page-head-main {
+      margin: 0;
+      padding: 0;
     }
     .console-page-head-main h2 {
       margin: 0;
@@ -1615,9 +1640,9 @@
       document.getElementById("kb-shelves").innerHTML = `
         <div class="panel">
           <div class="panel-head">
-            <h3>知识缺口识别与生产 · Knowledge Gap Finder</h3>
+            <h3 class="kgf-title">知识缺口识别与生产 · Knowledge Gap Finder</h3>
           </div>
-          <p class="muted" style="margin:0 0 10px">从“知识缺失导致问题”到“主动补齐知识缺口”。3 类来源识别缺口，AI 制助起草，PM 审核，COE 定稿。</p>
+          <p class="kgf-subline">从“知识缺失导致问题”到“主动补齐知识缺口”。3 类来源识别缺口，AI 制助起草，PM 审核，COE 定稿。</p>
 
           <div class="kgf-kpi-grid">
             <div class="kgf-kpi-card"><div class="k">待补缺口</div><div class="v">${totalCnt}</div><div class="muted">高优 ${highCnt}</div></div>
